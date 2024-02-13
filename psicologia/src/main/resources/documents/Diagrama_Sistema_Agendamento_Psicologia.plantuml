@@ -1,0 +1,31 @@
+@startuml
+
+class Paciente {
+    - nome: String
+    - cpf: String
+    - dataNascimento: String
+}
+
+class Endereco {
+    - cep: String
+    - logradouro: String
+    - bairro: String
+    - complemento: String
+}
+
+class Estado {
+    - nome: String
+    - sigla: String
+}
+
+class Cidade {
+    - nome: String
+}
+
+Paciente "1" *--> "1" Endereco
+Paciente "*" --> "1" Cidade : naturalidade
+
+Endereco "*" --> "1" Cidade
+Cidade "*" --> "1" Estado
+
+@enduml
