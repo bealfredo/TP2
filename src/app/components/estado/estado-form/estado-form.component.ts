@@ -9,6 +9,7 @@ import { Estado } from '../../../models/estado.model';
 import { NgIf } from '@angular/common';
 import {MatCardModule} from '@angular/material/card';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-estado-form',
@@ -36,42 +37,35 @@ export class EstadoFormComponent {
       nome: [(estado && estado.nome) ? estado.nome : '',
       Validators.compose([
         Validators.required,
-        Validators.minLength(4)]
-      )],
+        Validators.minLength(4)
+      ])],
       sigla: [(estado && estado.sigla) ? estado.sigla : '',
       Validators.compose([
         Validators.required,
         Validators.pattern(/^[a-zA-Z]{2}$/)
-        ]
-      )],
+      ])],
     })
   }
 
   salvar() {
-    console.log(this.formGroup);
     this.formGroup.markAllAsTouched();
-    if (this.formGroup.valid) {
-      const estado = this.formGroup.value;
-      if (estado.id == null) {
-        this.estadoService.insert(estado).subscribe({
-          next: (estadoCadastrado) => {
-            this.router.navigateByUrl('/estados');
-          },
-          error: (err) => {
-            console.log('Erro ao incluir' + JSON.stringify(err));
-          }
-        })
-      } else {
-        this.estadoService.update(estado).subscribe({
-          next: (estadoAlterado) => {
-            this.router.navigateByUrl('/estados');
-          },
-          error: (err) => {
-            console.log('Erro ao editar' + JSON.stringify(err));
-          }
-        })
+    if (!this.formGroup.valid) { return; }
+
+    const estado = this.formGroup.value;
+
+    const operacao = (estado.id == null)
+    ? this.estadoService.insert(estado)
+    : this.estadoService.update(estado);
+
+    operacao.subscribe({
+      next: () => {
+        this.router.navigateByUrl('/estados');
+      },
+      error: (err) => {
+        console.log('Erro ao salvar', err);
+        this.tratarErrors(err);
       }
-    }
+    })
   }
 
   excluir() {
@@ -90,14 +84,35 @@ export class EstadoFormComponent {
     }
   }
 
+  tratarErrors(error: HttpErrorResponse) {
+    if (error.status == 400) {
+      if (error.error?.errors) {
+        error.error.errors.forEach((validationError: any) => {
+          const formControl = this.formGroup.get(validationError.fieldName);
+          if (formControl) {
+            // console.log('formControl', formControl)
+            formControl.setErrors({apiError: validationError.message});
+          }
+        });
+      }
+    } else if (error.status < 500) {
+      alert(error.error?.message || 'Erro genérico de envio do formulário.');
+    } else if (error.status >= 500) {
+      alert('Erro interno do servidor. Tente novamente mais tarde.');
+    }
+  }
+
+
   errorMessages : {[controlName: string] : {[errorName: string]: string}} = {
     nome: {
       required: 'O nome deve ser informado.',
-      minlength: 'O nome deve ter no mínimo 4 caracteres.'
+      minlength: 'O nome deve ter no mínimo 4 caracteres.',
+      apiError: ' ' // mensagem da api
     },
     sigla: {
       required: 'A sigla deve ser informado.',
-      pattern: 'A sigla deve possuir exatamente 2 letras.'
+      pattern: 'A sigla deve possuir exatamente 2 letras.',
+      apiError: ' ' // mensagem da api
     }
   }
 

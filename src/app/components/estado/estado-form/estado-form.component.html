@@ -25,6 +25,10 @@
 
           <mat-error *ngIf="formGroup.get('nome')?.errors && formGroup.get('nome')?.touched">
             {{this.getErrorMessages('nome', this.formGroup.get('nome')?.errors)}}
+
+            @if (formGroup.get('nome')?.hasError('apiError')) {
+              <span>{{formGroup.get('nome')?.getError('apiError')}}</span>
+            }
           </mat-error>
         </mat-form-field>
 
@@ -34,6 +38,11 @@
 
           <mat-error *ngIf="formGroup.get('sigla')?.errors && formGroup.get('sigla')?.touched">
             {{this.getErrorMessages('sigla', this.formGroup.get('sigla')?.errors)}}
+
+
+            @if (formGroup.get('sigla')?.hasError('apiError')) {
+              <span>{{formGroup.get('sigla')?.getError('apiError')}}</span>
+            }
           </mat-error>
 
         </mat-form-field>
