@@ -8,31 +8,34 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { CategoriaPlanta } from '../../../models/categoriaPlanta.model';
-import { CategoriaPlantaService } from '../../../services/categoriaPlanta.service';
+import { Tag } from '../../../models/tag.model';
+import { TagService } from '../../../services/tag.service';
 import {MatSelectModule} from '@angular/material/select';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import { TipoCategoria } from '../../../models/tipoCategoria.model';
 import { CommonModule } from '@angular/common';
+import { CategoriaPlanta } from '../../../models/categoriaPlanta.model';
+import { CategoriaPlantaService } from '../../../services/categoriaPlanta.service';
 import { MatSlideToggle } from '@angular/material/slide-toggle';
 
 @Component({
-  selector: 'app-categoriaPlanta-form',
+  selector: 'app-tag-form',
   standalone: true,
   imports: [NgIf, ReactiveFormsModule, MatFormFieldModule, MatInputModule,
     MatButtonModule, MatCardModule, MatToolbarModule, RouterModule, MatSelectModule,
     MatCheckboxModule, CommonModule, MatSlideToggle],
-  templateUrl: './categoriaPlanta-form.component.html',
-  styleUrl: './categoriaPlanta-form.component.css'
+  templateUrl: './tag-form.component.html',
+  styleUrl: './tag-form.component.css'
 })
-export class CategoriaPlantaFormComponent {
+export class TagFormComponent {
 
   formGroup: FormGroup;
-  tiposCategoria: TipoCategoria[] = [];
+  categoriasPlantas: CategoriaPlanta[] = [];
 
   constructor(
     private formBuilder: FormBuilder,
-    private categoriaplantaService: CategoriaPlantaService,
+    private tagService: TagService,
+    private catoriaPlantaService: CategoriaPlantaService,
     private router: Router,
     private activatedRoute: ActivatedRoute
   ) {
@@ -42,50 +45,49 @@ export class CategoriaPlantaFormComponent {
       descricao: [''],
       prioridade: [0, Validators.required],
       ativa: [false, Validators.required],
-      idTipoCategoria: [null, Validators.required]
+      idCategoriaPlanta: [null, Validators.required]
     });
   }
 
   ngOnInit(): void {
-    this.categoriaplantaService.listAllTipoCategoria().subscribe(data => {
-      this.tiposCategoria = data;
+    this.catoriaPlantaService.findAll().subscribe(data => {
+      this.categoriasPlantas = data;
       this.initializeForm();
     })
   }
 
   initializeForm(): void {
-    const categoriaPlanta : CategoriaPlanta = this.activatedRoute.snapshot.data['categoriaPlanta'];
+    const tag : Tag = this.activatedRoute.snapshot.data['tag'];
 
-    const idTipoCategoria = categoriaPlanta ? this.tiposCategoria.find(tipoCategoria => tipoCategoria.id === (categoriaPlanta?.tipoCategoria.id || null))?.id : null;
+    const idCategoriaPlanta = tag ? this.categoriasPlantas.find(tipoCategoria => tipoCategoria.id === (tag?.categoriaPlanta.id || null))?.id : null;
 
     this.formGroup = this.formBuilder.group({
-      id: [(categoriaPlanta && categoriaPlanta.id) ? categoriaPlanta.id : null],
-      nome: [(categoriaPlanta && categoriaPlanta.nome) ? categoriaPlanta.nome : '',
+      id: [(tag && tag.id) ? tag.id : null],
+      nome: [(tag && tag.nome) ? tag.nome : '',
       Validators.compose([
         Validators.required,
-        // Validators.minLength(4)
       ])],
-      descricao: [(categoriaPlanta && categoriaPlanta.descricao) ? categoriaPlanta.descricao : '',
+      descricao: [(tag && tag.descricao) ? tag.descricao : '',
       Validators.compose([
         Validators.maxLength(400),
       ])],
-      prioridade: [(categoriaPlanta && categoriaPlanta.prioridade) ? categoriaPlanta.prioridade : 0,
+      prioridade: [(tag && tag.prioridade) ? tag.prioridade : 0,
       Validators.compose([
         Validators.required,
       ])],
-      ativa: [(categoriaPlanta && categoriaPlanta.ativa) ? categoriaPlanta.ativa : false,
+      ativa: [(tag && tag.ativa) ? tag.ativa : false,
       Validators.compose([
         Validators.required,
       ])],
-      idTipoCategoria: [idTipoCategoria,
+      idCategoriaPlanta: [idCategoriaPlanta,
       Validators.compose([
         Validators.required,
       ])]
     })
   }
 
-  getTipoCategoriaDescription(idTipoCategoria: number): string {
-    return this.tiposCategoria.find(tipoCategoria => tipoCategoria.id === idTipoCategoria)?.description || '';
+  getCategoriaPlantaDescription(idTipoCategoria: number): string {
+    return this.categoriasPlantas.find(tipoCategoria => tipoCategoria.id === idTipoCategoria)?.descricao || '';
   }
 
 
@@ -93,15 +95,15 @@ export class CategoriaPlantaFormComponent {
     this.formGroup.markAllAsTouched();
     if (!this.formGroup.valid) { return; }
 
-    const categoriaplanta = this.formGroup.value;
+    const tag = this.formGroup.value;
 
-    const operacao = (categoriaplanta.id == null)
-    ? this.categoriaplantaService.insert(categoriaplanta)
-    : this.categoriaplantaService.update(categoriaplanta);
+    const operacao = (tag.id == null)
+    ? this.tagService.insert(tag)
+    : this.tagService.update(tag);
 
     operacao.subscribe({
       next: () => {
-        this.router.navigateByUrl('/categoriasplanta');
+        this.router.navigateByUrl('/tags');
       },
       error: (err) => {
         console.log('Erro ao salvar', err);
@@ -112,14 +114,14 @@ export class CategoriaPlantaFormComponent {
 
   excluir() {
     if (this.formGroup.valid) {
-      const categoriaplanta = this.formGroup.value;
-      if (categoriaplanta.id != null) {
-        this.categoriaplantaService.delete(categoriaplanta).subscribe({
+      const tag = this.formGroup.value;
+      if (tag.id != null) {
+        this.tagService.delete(tag).subscribe({
           next: () => {
             this.router.navigateByUrl('/categoriasplanta');
           },
           error: (err) => {
-            window.alert('Não foi possível excluir a categoria de planta. Verifique se ela está sendo utilizada em alguma planta ou tag.');
+            window.alert('Não foi possível excluir a categoria de planta. Verifique se ela está sendo utilizada em algum produto.');
             console.log('Erro ao excluir' + JSON.stringify(err));
           }
         })
@@ -163,8 +165,8 @@ export class CategoriaPlantaFormComponent {
       required: 'Deve ser informado se a categoria está ativa ou não.',
       apiError: ' ' // mensagem da api
     },
-    idTipoCategoria: {
-      required: 'O tipo de categoria deve ser informado.',
+    idCategoriaPlanta: {
+      required: 'A categoria de planta deve ser informada.',
       apiError: ' ' // mensagem da api
     }
   }

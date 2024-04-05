@@ -3,7 +3,7 @@
 
 <div class="pageContent">
   <div class="header">
-    <h1>Cadastro de Categoria de Planta</h1>
+    <h1>Cadastro de Tag</h1>
   </div>
 
   <mat-card class="card">
@@ -56,29 +56,28 @@
         </mat-form-field>
 
         <mat-form-field appearance="fill" class="full-width-input">
-          <mat-label>Tipo Categoria</mat-label>
+          <mat-label>Categoria de Planta</mat-label>
 
-          <mat-select formControlName="idTipoCategoria">
-            @for (idTipoCategoria of tiposCategoria; track idTipoCategoria.id) {
-              <mat-option [value]="idTipoCategoria.id">{{idTipoCategoria.label}}</mat-option>
+          <mat-select formControlName="idCategoriaPlanta">
+            @for (categoria of categoriasPlantas; track categoria.id) {
+              <mat-option [value]="categoria.id">{{categoria.nome}} ({{categoria.tipoCategoria.label}})</mat-option>
             }
           </mat-select>
           <mat-hint>
-            {{ getTipoCategoriaDescription(formGroup.get('idTipoCategoria')?.value) }}
+            {{ getCategoriaPlantaDescription(formGroup.get('idCategoriaPlanta')?.value) }}
           </mat-hint>
 
-          <mat-error *ngIf="formGroup.get('idTipoCategoria')?.errors && formGroup.get('idTipoCategoria')?.touched">
-            {{this.getErrorMessages('idTipoCategoria', this.formGroup.get('idTipoCategoria')?.errors)}}
+          <mat-error *ngIf="formGroup.get('idCategoriaPlanta')?.errors && formGroup.get('idCategoriaPlanta')?.touched">
+            {{this.getErrorMessages('idCategoriaPlanta', this.formGroup.get('idCategoriaPlanta')?.errors)}}
 
 
-            @if (formGroup.get('idTipoCategoria')?.hasError('apiError')) {
-              <span>{{formGroup.get('idTipoCategoria')?.getError('apiError')}}</span>
+            @if (formGroup.get('idCategoriaPlanta')?.hasError('apiError')) {
+              <span>{{formGroup.get('idCategoriaPlanta')?.getError('apiError')}}</span>
             }
           </mat-error>
         </mat-form-field>
 
         <div>
-          <!-- <mat-checkbox class="example-margin" formControlName="ativa">Categoria ativa</mat-checkbox> -->
           <mat-slide-toggle
             formControlName="ativa"
             class="example-margin"
@@ -115,7 +114,7 @@
         Excluir
       </button>
       <button mat-raised-button
-        routerLink="/categoriasplanta"
+        routerLink="/tags"
       >
         cancelar
       </button>
