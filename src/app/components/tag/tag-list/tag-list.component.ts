@@ -7,39 +7,39 @@ import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
 import { RouterModule } from '@angular/router';
-import { CategoriaPlanta } from '../../../models/categoriaPlanta.model';
-import { CategoriaPlantaService } from '../../../services/categoriaPlanta.service';
+import { Tag } from '../../../models/tag.model';
+import { TagService } from '../../../services/tag.service';
 import { CommonModule } from '@angular/common';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 
 @Component({
-  selector: 'app-categoriaPlanta-list',
+  selector: 'app-tag-list',
   standalone: true,
   imports: [NgFor, MatTableModule, MatToolbarModule, MatIconModule, MatButtonModule, RouterModule, CommonModule, MatTooltipModule, MatSlideToggleModule],
-  templateUrl: './categoriaPlanta-list.component.html',
-  styleUrl: './categoriaPlanta-list.component.css'
+  templateUrl: './tag-list.component.html',
+  styleUrl: './tag-list.component.css'
 })
-export class CategoriaPlantaListComponent implements OnInit {
+export class TagListComponent implements OnInit {
 
-  displayedColumns: string[] = ['id', 'nome', 'prioridade', 'ativa', 'tipoCategoria', 'acao'];
-  categoriasPlanta: CategoriaPlanta[] = [];
+  displayedColumns: string[] = ['id', 'nome', 'prioridade', 'ativa', 'categoriaPlanta', 'acao'];
+  categoriasPlanta: Tag[] = [];
   orderBy: string = 'id';
 
-  constructor(private categoriaPlantaService: CategoriaPlantaService) {} // injeção de dependência
+  constructor(private tagService: TagService) {} // injeção de dependência
 
   ngOnInit(): void {
-    this.categoriaPlantaService.findAll().subscribe(data => {
+    this.tagService.findAll().subscribe(data => {
       this.categoriasPlanta = data;
     })
   }
 
-  updateAtiva(categoriaPlanta: CategoriaPlanta): void {
-    const currentAtiva = categoriaPlanta.ativa;
+  updateAtiva(tag: Tag): void {
+    const currentAtiva = tag.ativa;
 
-    const dto = { ativa: !categoriaPlanta.ativa };
-    this.categoriaPlantaService.updateAtiva(dto, categoriaPlanta.id).subscribe(data => {
-      const index = this.categoriasPlanta.findIndex(c => c.id === categoriaPlanta.id);
+    const dto = { ativa: !tag.ativa };
+    this.tagService.updateAtiva(dto, tag.id).subscribe(data => {
+      const index = this.categoriasPlanta.findIndex(c => c.id === tag.id);
       this.categoriasPlanta[index].ativa = !currentAtiva;
       this.categoriasPlanta = [...this.categoriasPlanta];
     });
@@ -61,8 +61,8 @@ export class CategoriaPlantaListComponent implements OnInit {
       this.orderByPrioridade();
     } else if (orderBy === 'ativa') {
       this.orderByAtiva();
-    } else if (orderBy === 'tipoCategoria') {
-      this.orderByTipoCategoria();
+    } else if (orderBy === 'categoriaPlanta') {
+      this.orderByCategoriaPlanta();
     }
   }
 
@@ -107,15 +107,15 @@ export class CategoriaPlantaListComponent implements OnInit {
     this.categoriasPlanta = [...this.categoriasPlanta];
   }
 
-  orderByTipoCategoria(): void {
+  orderByCategoriaPlanta(): void {
     this.categoriasPlanta.sort((a, b) => {
-      const tipoCategoriaA = a.tipoCategoria.label.toLowerCase();
-      const tipoCategoriaB = b.tipoCategoria.label.toLowerCase();
+      const categoriaPlantaA = a.categoriaPlanta.nome.toLowerCase();
+      const categoriaPlantaB = b.categoriaPlanta.nome.toLowerCase();
 
-      if (tipoCategoriaA < tipoCategoriaB) {
+      if (categoriaPlantaA < categoriaPlantaB) {
         return -1;
       }
-      if (tipoCategoriaA > tipoCategoriaB) {
+      if (categoriaPlantaA > categoriaPlantaB) {
         return 1;
       }
       return 0;
