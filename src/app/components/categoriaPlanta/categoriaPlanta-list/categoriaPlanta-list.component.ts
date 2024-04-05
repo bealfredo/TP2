@@ -9,11 +9,14 @@ import {MatButtonModule} from '@angular/material/button';
 import { RouterModule } from '@angular/router';
 import { CategoriaPlanta } from '../../../models/categoriaPlanta.model';
 import { CategoriaPlantaService } from '../../../services/categoriaPlanta.service';
+import { CommonModule } from '@angular/common';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 
 @Component({
   selector: 'app-categoriaPlanta-list',
   standalone: true,
-  imports: [NgFor, MatTableModule, MatToolbarModule, MatIconModule, MatButtonModule, RouterModule],
+  imports: [NgFor, MatTableModule, MatToolbarModule, MatIconModule, MatButtonModule, RouterModule, CommonModule, MatTooltipModule, MatSlideToggleModule],
   templateUrl: './categoriaPlanta-list.component.html',
   styleUrl: './categoriaPlanta-list.component.css'
 })
@@ -29,6 +32,17 @@ export class CategoriaPlantaListComponent implements OnInit {
     this.categoriaPlantaService.findAll().subscribe(data => {
       this.categoriasPlanta = data;
     })
+  }
+
+  updateAtiva(categoriaPlanta: CategoriaPlanta): void {
+    const currentAtiva = categoriaPlanta.ativa;
+
+    const dto = { ativa: !categoriaPlanta.ativa };
+    this.categoriaPlantaService.updateAtiva(dto, categoriaPlanta.id).subscribe(data => {
+      const index = this.categoriasPlanta.findIndex(c => c.id === categoriaPlanta.id);
+      this.categoriasPlanta[index].ativa = !currentAtiva;
+      this.categoriasPlanta = [...this.categoriasPlanta];
+    });
   }
 
   setOrderBy(column: string): void {

@@ -33,3 +33,23 @@
   min-width: 10em;
   text-align: center;
 }
+
+.ativa-button {
+  /* color: white; */
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+}
+
+.ativa .mat-icon,
+.inativa .mat-icon{
+  cursor: pointer;
+}
+
+.ativa .mat-icon{
+  color: green;
+}
+
+.inativa .mat-icon{
+  color: red;
+}

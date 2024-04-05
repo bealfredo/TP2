@@ -9,3 +9,7 @@ export class CategoriaPlanta {
     tipoCategoria!: TipoCategoria;
 }
 
+export class CategoriaPlantaUpdateAtiva {
+  ativa!: boolean;
+}
+
