@@ -7,7 +7,7 @@ import { CidadeFormComponent } from './components/cidade/cidade-form/cidade-form
 import { cidadeResolver } from './components/cidade/resolver/cidade-resolver';
 import { CategoriaPlantaListComponent } from './components/categoriaPlanta/categoriaPlanta-list/categoriaPlanta-list.component';
 import { CategoriaPlantaFormComponent } from './components/categoriaPlanta/categoriaPlanta-form/categoriaPlanta-form.component';
-import { categoriaPlantaResolver } from './components/estado/resolver/categoriaPlanta-resolver';
+import { categoriaPlantaResolver } from './components/categoriaPlanta/resolver/categoriaPlanta-resolver';
 
 export const routes: Routes = [
     { path: 'estados', component: EstadoListComponent, title: 'Lista de Estados'},
