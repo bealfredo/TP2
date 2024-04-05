@@ -1,0 +1,88 @@
+<div class="pageContent">
+
+  <div class="header header-list">
+    <h1>Controle de Categoria de Planta</h1>
+
+    <button mat-flat-button color="primary" routerLink="/categoriasplanta/new">
+      <mat-icon>add</mat-icon> Adicionar
+    </button>
+  </div>
+
+  <table mat-table [dataSource]="categoriasPlanta" class="mat-elevation-z8">
+
+    <!-- Position Column -->
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef (click)="setOrderBy('id')"> Id </th>
+      <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+    </ng-container>
+
+    <!-- Nome Column -->
+    <ng-container matColumnDef="nome">
+      <th mat-header-cell *matHeaderCellDef (click)="setOrderBy('nome')"> Nome </th>
+      <td mat-cell *matCellDef="let element"> {{element.nome}} </td>
+    </ng-container>
+
+    <!-- Descricao Column -->
+    <!-- <ng-container matColumnDef="descricao">
+      <th mat-header-cell *matHeaderCellDef> Descricao </th>
+      <td mat-cell *matCellDef="let element"> {{element.descricao}} </td>
+    </ng-container> -->
+
+    <!-- Prioridade Column -->
+    <ng-container matColumnDef="prioridade">
+      <th mat-header-cell *matHeaderCellDef (click)="setOrderBy('prioridade')"> Prioridade </th>
+      <td mat-cell *matCellDef="let element"> {{element.prioridade}} </td>
+    </ng-container>
+
+    <!-- Ativa Column -->
+    <ng-container matColumnDef="ativa">
+      <th mat-header-cell *matHeaderCellDef (click)="setOrderBy('ativa')"> Ativa </th>
+      <td mat-cell *matCellDef="let element" [ngClass]="{ 'ativa': element.ativa, 'inativa': !element.ativa }">
+        <!-- <button mat-icon-button
+            [title]="element.ativa ? 'Ativar' : 'Desativar'"
+            (click)="updateAtiva(element)"
+            class="ativa-button">
+            <mat-icon>{{ element.ativa ? 'toggle_on' : 'toggle_off' }}</mat-icon>
+        </button> -->
+        <mat-slide-toggle
+            (click)="updateAtiva(element)"
+            class="example-margin"
+            [color]="'primary'"
+            [checked]="element.ativa ? true : false">
+        </mat-slide-toggle>
+      </td>
+    </ng-container>
+
+
+    <!-- TipoCategoria Column -->
+    <ng-container matColumnDef="tipoCategoria">
+      <th mat-header-cell *matHeaderCellDef (click)="setOrderBy('tipoCategoria')"> TipoCategoria </th>
+      <td mat-cell *matCellDef="let element"> {{element.tipoCategoria.label}} </td>
+    </ng-container>
+
+    <!-- Ação Column -->
+    <ng-container matColumnDef="acao">
+      <th mat-header-cell *matHeaderCellDef> Ação </th>
+      <td mat-cell *matCellDef="let element">
+        <button mat-icon-button
+          color="primary"
+          routerLink="/categoriasplanta/edit/{{element.id}}"
+        >
+          <mat-icon>edit</mat-icon>
+        </button>
+        <!-- <button mat-icon-button
+          color="warn"
+        >
+          <mat-icon>delete</mat-icon>
+        </button> -->
+      </td>
+    </ng-container>
+
+
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+</div>
+
+<!-- displayedColumns: string[] = ['id', 'nome', 'descricao', 'prioridade', 'ativa', 'tipoCategoria']; -->
