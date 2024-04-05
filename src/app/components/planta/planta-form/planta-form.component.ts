@@ -29,39 +29,9 @@ import {MatChipInputEvent, MatChipsModule} from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
 import {MatAutocompleteSelectedEvent, MatAutocompleteModule} from '@angular/material/autocomplete';
 import { Observable } from 'rxjs';
+import { TagService } from '../../../services/tag.service';
+import { Tag } from '../../../models/tag.model';
 
-
-
-// export class Planta {
-//   id!: number;
-//   nomeComum!: string;
-//   nomeCientifico!: string;
-//   descricao!: string;
-//   codigo!: string;
-//   imagemPrincipal!: string;
-//   imagens!: string[];
-//   precoVenda!: number;
-//   precoCusto!: number;
-//   desconto!: number;
-//   quantidadeDisponivel!: number;
-//   quantidadeVendido!: number;
-//   origem!: string;
-//   tempoCrescimento!: string;
-//   statusPlanta!: StatusPlanta;
-//   nivelDificuldade!: NivelDificuldade;
-//   nivelToxidade!: NivelToxicidade;
-//   portePlanta!: PortePlanta;
-//   plantas!: Planta[];
-//   fornecedor!: Fornecedor;
-//   categoriaPlanta!: CategoriaPlanta;
-// }
-// FormsModule,
-//     MatFormFieldModule,
-//     MatChipsModule,
-//     MatIconModule,
-//     MatAutocompleteModule,
-//     ReactiveFormsModule,
-//     AsyncPipe,
 
 @Component({
   selector: 'app-planta-form',
@@ -81,12 +51,16 @@ export class PlantaFormComponent {
   nivelToxicidades: NivelToxicidade[] = [];
   portePlantas: PortePlanta[] = [];
   fornecedores: Fornecedor[] = [];
+  tags: Tag[] = [];
+
+  tagsSelected: Tag[] = [];
 
   constructor(
     private formBuilder: FormBuilder,
     private plantaService: PlantaService,
     private catoriaPlantaService: CategoriaPlantaService,
     private fornecedorService: FornecedorService,
+    private tagsService: TagService,
     private router: Router,
     private activatedRoute: ActivatedRoute
   ) {
@@ -133,6 +107,9 @@ export class PlantaFormComponent {
     })
     this.fornecedorService.findAll().subscribe(data => {
       this.fornecedores = data;
+    })
+    this.tagsService.findAll().subscribe(data => {
+      this.tags = data;
     })
     this.initializeForm();
   }
@@ -250,6 +227,10 @@ export class PlantaFormComponent {
     return this.portePlantas.find(portePlanta => portePlanta.id === idPortePlanta)?.description || '';
   }
 
+  getTagDescription(idTag: number): string {
+    return this.tags.find(tag => tag.id === idTag)?.descricao || '';
+  }
+
 
   salvar() {
     this.formGroup.markAllAsTouched();
@@ -279,19 +260,17 @@ export class PlantaFormComponent {
   }
 
   excluir() {
-    if (this.formGroup.valid) {
-      const planta = this.formGroup.value;
-      if (planta.id != null) {
-        this.plantaService.delete(planta).subscribe({
-          next: () => {
-            this.router.navigateByUrl('/plantas');
-          },
-          error: (err) => {
-            window.alert('Não foi possível excluir a planta.');
-            console.log('Erro ao excluir' + JSON.stringify(err));
-          }
-        })
-      }
+    const planta = this.formGroup.value;
+    if (planta.id != null) {
+      this.plantaService.delete(planta).subscribe({
+        next: () => {
+          this.router.navigateByUrl('/plantas');
+        },
+        error: (err) => {
+          window.alert('Não foi possível excluir a planta.');
+          console.log('Erro ao excluir' + JSON.stringify(err));
+        }
+      })
     }
   }
 

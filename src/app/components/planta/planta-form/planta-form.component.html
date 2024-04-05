@@ -272,6 +272,15 @@
           </mat-error>
         </mat-form-field>
 
+        <mat-form-field class="full-width-input">
+          <mat-label>Toppings</mat-label>
+          <mat-select formControlName="idStatusPlanta" multiple>
+            @for (tag of tags; track tagsSelected) {
+              <mat-option [value]="tagsSelected">{{tag.nome}}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
       </form>
     </mat-card-content>
     <mat-card-actions>
@@ -282,7 +291,6 @@
         Salvar
       </button>
       <button mat-raised-button
-        *ngIf="formGroup?.get('id')?.value"
         color="warn"
         (click)="excluir()"
       >
