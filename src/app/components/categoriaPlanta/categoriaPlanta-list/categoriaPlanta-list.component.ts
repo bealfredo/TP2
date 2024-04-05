@@ -31,6 +31,7 @@ export class CategoriaPlantaListComponent implements OnInit {
   ngOnInit(): void {
     this.categoriaPlantaService.findAll().subscribe(data => {
       this.categoriasPlanta = data;
+      this.oderBy(this.orderBy);
     })
   }
 

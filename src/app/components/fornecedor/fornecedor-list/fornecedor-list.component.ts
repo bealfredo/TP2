@@ -31,6 +31,7 @@ export class FornecedorListComponent implements OnInit {
   ngOnInit(): void {
     this.fornecedorService.findAll().subscribe(data => {
       this.fornecedores = data;
+      this.oderBy(this.orderBy);
     })
   }
 

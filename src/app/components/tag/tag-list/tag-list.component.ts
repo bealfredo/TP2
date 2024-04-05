@@ -31,6 +31,7 @@ export class TagListComponent implements OnInit {
   ngOnInit(): void {
     this.tagService.findAll().subscribe(data => {
       this.tags = data;
+      this.oderBy(this.orderBy);
     })
   }
 
