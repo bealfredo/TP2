@@ -11,6 +11,9 @@ import { categoriaPlantaResolver } from './components/categoriaPlanta/resolver/c
 import { tagResolver } from './components/tag/resolver/tag-resolver';
 import { TagFormComponent } from './components/tag/tag-form/tag-form.component';
 import { TagListComponent } from './components/tag/tag-list/tag-list.component';
+import { FornecedorListComponent } from './components/fornecedor/fornecedor-list/fornecedor-list.component';
+import { FornecedorFormComponent } from './components/fornecedor/fornecedor-form/fornecedor-form.component';
+import { fornecedorResolver } from './components/fornecedor/resolver/fornecedor-resolver';
 
 export const routes: Routes = [
     { path: 'estados', component: EstadoListComponent, title: 'Lista de Estados'},
@@ -28,5 +31,10 @@ export const routes: Routes = [
     { path: 'tags', component: TagListComponent, title: 'Lista de Tags'},
     { path: 'tags/new', component: TagFormComponent, title: 'Nova Tag'},
     { path: 'tags/edit/:id', component: TagFormComponent, resolve:{tag: tagResolver}, title: 'Editar Tag'},
+
+    { path: 'fornecedores', component: FornecedorListComponent, title: 'Lista de Fornecedores'},
+    { path: 'fornecedores/new', component: FornecedorFormComponent, title: 'Novo Fornecedor'},
+    { path: 'fornecedores/edit/:id', component: FornecedorFormComponent, resolve:{fornecedor: fornecedorResolver}, title: 'Editar Fornecedor'},
+
 
 ];

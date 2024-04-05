@@ -8,8 +8,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { Tag } from '../../../models/tag.model';
-import { TagService } from '../../../services/tag.service';
+import { Fornecedor } from '../../../models/fornecedor.model';
+import { FornecedorService } from '../../../services/fornecedor.service';
 import {MatSelectModule} from '@angular/material/select';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import { TipoCategoria } from '../../../models/tipoCategoria.model';
@@ -19,91 +19,90 @@ import { CategoriaPlantaService } from '../../../services/categoriaPlanta.servic
 import { MatSlideToggle } from '@angular/material/slide-toggle';
 
 @Component({
-  selector: 'app-tag-form',
+  selector: 'app-fornecedor-form',
   standalone: true,
   imports: [NgIf, ReactiveFormsModule, MatFormFieldModule, MatInputModule,
     MatButtonModule, MatCardModule, MatToolbarModule, RouterModule, MatSelectModule,
     MatCheckboxModule, CommonModule, MatSlideToggle],
-  templateUrl: './tag-form.component.html',
-  styleUrl: './tag-form.component.css'
+  templateUrl: './fornecedor-form.component.html',
+  styleUrl: './fornecedor-form.component.css'
 })
-export class TagFormComponent {
+export class FornecedorFormComponent {
 
   formGroup: FormGroup;
-  categoriasPlantas: CategoriaPlanta[] = [];
 
   constructor(
     private formBuilder: FormBuilder,
-    private tagService: TagService,
-    private catoriaPlantaService: CategoriaPlantaService,
+    private fornecedorService: FornecedorService,
     private router: Router,
     private activatedRoute: ActivatedRoute
   ) {
     this.formGroup = formBuilder.group({
       id: [null],
       nome: ['', Validators.required],
-      descricao: [''],
-      prioridade: [0, Validators.required],
-      ativa: [false, Validators.required],
-      idCategoriaPlanta: [null, Validators.required]
+      email: [''],
+      telefone: ['2'],
+      cnpj: ['']
     });
   }
 
   ngOnInit(): void {
-    this.catoriaPlantaService.findAll().subscribe(data => {
-      this.categoriasPlantas = data;
+    this.fornecedorService.findAll().subscribe(data => {
       this.initializeForm();
     })
   }
 
   initializeForm(): void {
-    const tag : Tag = this.activatedRoute.snapshot.data['tag'];
-
-    const idCategoriaPlanta = tag ? this.categoriasPlantas.find(tipoCategoria => tipoCategoria.id === (tag?.categoriaPlanta.id || null))?.id : null;
+    const fornecedor : Fornecedor = this.activatedRoute.snapshot.data['fornecedor'];
 
     this.formGroup = this.formBuilder.group({
-      id: [(tag && tag.id) ? tag.id : null],
-      nome: [(tag && tag.nome) ? tag.nome : '',
+      id: [(fornecedor && fornecedor.id) ? fornecedor.id : null],
+      nome: [(fornecedor && fornecedor.nome) ? fornecedor.nome : '',
       Validators.compose([
         Validators.required,
       ])],
-      descricao: [(tag && tag.descricao) ? tag.descricao : '',
+      email: [(fornecedor && fornecedor.email) ? fornecedor.email : '',
       Validators.compose([
-        Validators.maxLength(400),
+        Validators.email,
       ])],
-      prioridade: [(tag && tag.prioridade) ? tag.prioridade : 0,
+      telefone: [(fornecedor && fornecedor.telefone) ? fornecedor.telefone : '',
       Validators.compose([
-        Validators.required,
+        Validators.pattern('^[0-9]{11}$'),
       ])],
-      ativa: [(tag && tag.ativa) ? tag.ativa : false,
+      cnpj: [(fornecedor && fornecedor.cnpj) ? fornecedor.cnpj : '',
       Validators.compose([
-        Validators.required,
-      ])],
-      idCategoriaPlanta: [idCategoriaPlanta,
-      Validators.compose([
-        Validators.required,
+        Validators.pattern('^[0-9]{14}$'),
       ])]
     })
   }
 
-  getCategoriaPlantaDescription(idTipoCategoria: number): string {
-    return this.categoriasPlantas.find(tipoCategoria => tipoCategoria.id === idTipoCategoria)?.descricao || '';
+  formatarCnpj(cnpj: string): string {
+    if (cnpj && cnpj.length === 14) {
+      return `${cnpj.substring(0, 2)}.${cnpj.substring(2, 5)}.${cnpj.substring(5, 8)}/${cnpj.substring(8, 12)}-${cnpj.substring(12, 14)}`;
+    }
+    return cnpj;
   }
 
+  formatarTelefone(telefone: string): string {
+    if (telefone && telefone.length === 11) {
+      return `(${telefone.substring(0, 2)}) ${telefone.substring(2, 7)}-${telefone.substring(7, 11)}`;
+    }
+    return telefone;
+  }
 
   salvar() {
     this.formGroup.markAllAsTouched();
     if (!this.formGroup.valid) { return; }
 
-    const tag = this.formGroup.value;
+    const fornecedor = this.formGroup.value;
 
-    const operacao = (tag.id == null)
-    ? this.tagService.insert(tag)
-    : this.tagService.update(tag);
+    const operacao = (fornecedor.id == null)
+    ? this.fornecedorService.insert(fornecedor)
+    : this.fornecedorService.update(fornecedor);
 
     operacao.subscribe({
       next: () => {
-        this.router.navigateByUrl('/tags');
+        this.router.navigateByUrl('/fornecedores');
       },
       error: (err) => {
         console.log('Erro ao salvar', err);
@@ -114,14 +113,14 @@ export class TagFormComponent {
 
   excluir() {
     if (this.formGroup.valid) {
-      const tag = this.formGroup.value;
-      if (tag.id != null) {
-        this.tagService.delete(tag).subscribe({
+      const fornecedor = this.formGroup.value;
+      if (fornecedor.id != null) {
+        this.fornecedorService.delete(fornecedor).subscribe({
           next: () => {
-            this.router.navigateByUrl('/tags');
+            this.router.navigateByUrl('/fornecedores');
           },
           error: (err) => {
-            window.alert('Não foi possível excluir a tag. Verifique se ela está sendo utilizada em algum produto.');
+            window.alert('Não foi possível excluir o fornecedor. Verifique se o mesmo não está associado a uma planta.');
             console.log('Erro ao excluir' + JSON.stringify(err));
           }
         })
@@ -153,20 +152,16 @@ export class TagFormComponent {
       required: 'O nome deve ser informado.',
       apiError: ' ' // mensagem da api
     },
-    descricao: {
-      maxlength: 'A descrição deve ter no máximo 400 caracteres.',
+    email: {
+      email: 'E-mail inválido.',
       apiError: ' ' // mensagem da api
     },
-    prioridade: {
-      required: 'A prioridade deve ser informada.',
+    telefone: {
+      pattern: 'Telefone inválido. Deve ter 11 dígitos. (Apenas números.)',
       apiError: ' ' // mensagem da api
     },
-    ativa: {
-      required: 'Deve ser informado se a categoria está ativa ou não.',
-      apiError: ' ' // mensagem da api
-    },
-    idCategoriaPlanta: {
-      required: 'A categoria de planta deve ser informada.',
+    cnpj: {
+      pattern: 'CNPJ inválido. Deve ter 14 dígitos. (Apenas números.)',
       apiError: ' ' // mensagem da api
     }
   }

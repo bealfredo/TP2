@@ -23,14 +23,14 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 export class TagListComponent implements OnInit {
 
   displayedColumns: string[] = ['id', 'nome', 'prioridade', 'ativa', 'categoriaPlanta', 'acao'];
-  categoriasPlanta: Tag[] = [];
+  tags: Tag[] = [];
   orderBy: string = 'id';
 
   constructor(private tagService: TagService) {} // injeção de dependência
 
   ngOnInit(): void {
     this.tagService.findAll().subscribe(data => {
-      this.categoriasPlanta = data;
+      this.tags = data;
     })
   }
 
@@ -39,9 +39,9 @@ export class TagListComponent implements OnInit {
 
     const dto = { ativa: !tag.ativa };
     this.tagService.updateAtiva(dto, tag.id).subscribe(data => {
-      const index = this.categoriasPlanta.findIndex(c => c.id === tag.id);
-      this.categoriasPlanta[index].ativa = !currentAtiva;
-      this.categoriasPlanta = [...this.categoriasPlanta];
+      const index = this.tags.findIndex(c => c.id === tag.id);
+      this.tags[index].ativa = !currentAtiva;
+      this.tags = [...this.tags];
     });
   }
 
@@ -67,12 +67,12 @@ export class TagListComponent implements OnInit {
   }
 
   orderByID(): void {
-    this.categoriasPlanta.sort((a, b) => a.id - b.id);
-    this.categoriasPlanta = [...this.categoriasPlanta];
+    this.tags.sort((a, b) => a.id - b.id);
+    this.tags = [...this.tags];
   }
 
   orderByNome(): void {
-    this.categoriasPlanta.sort((a, b) => {
+    this.tags.sort((a, b) => {
       const nomeA = a.nome.toLowerCase();
       const nomeB = b.nome.toLowerCase();
 
@@ -85,16 +85,16 @@ export class TagListComponent implements OnInit {
       return 0;
     });
 
-    this.categoriasPlanta = [...this.categoriasPlanta];
+    this.tags = [...this.tags];
   }
 
   orderByPrioridade(): void {
-    this.categoriasPlanta.sort((a, b) => b.prioridade - a.prioridade);
-    this.categoriasPlanta = [...this.categoriasPlanta];
+    this.tags.sort((a, b) => b.prioridade - a.prioridade);
+    this.tags = [...this.tags];
   }
 
   orderByAtiva(): void {
-    this.categoriasPlanta.sort((a, b) => {
+    this.tags.sort((a, b) => {
       if (a.ativa && !b.ativa) {
         return -1;
       }
@@ -104,11 +104,11 @@ export class TagListComponent implements OnInit {
       return 0;
     });
 
-    this.categoriasPlanta = [...this.categoriasPlanta];
+    this.tags = [...this.tags];
   }
 
   orderByCategoriaPlanta(): void {
-    this.categoriasPlanta.sort((a, b) => {
+    this.tags.sort((a, b) => {
       const categoriaPlantaA = a.categoriaPlanta.nome.toLowerCase();
       const categoriaPlantaB = b.categoriaPlanta.nome.toLowerCase();
 
@@ -121,6 +121,6 @@ export class TagListComponent implements OnInit {
       return 0;
     });
 
-    this.categoriasPlanta = [...this.categoriasPlanta];
+    this.tags = [...this.tags];
   }
 }
