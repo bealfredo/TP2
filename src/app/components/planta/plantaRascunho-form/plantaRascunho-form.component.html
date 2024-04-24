@@ -1,0 +1,96 @@
+<!-- <mat-toolbar color="primary" class="toolbar-title">Cadastro de Categoria de Planta</mat-toolbar> -->
+
+
+<div class="pageContent">
+  <div class="header">
+    <h1>Cadastro de Planta (Rascunho)</h1>
+  </div>
+
+  <mat-card class="card">
+    <mat-card-content>
+      <form [formGroup]="formGroup">
+
+        <mat-form-field appearance="fill" class="full-width-input">
+          <mat-label>Nome comum</mat-label>
+          <input matInput type="text" formControlName="nomeComum">
+
+          <mat-error *ngIf="formGroup.get('nomeComum')?.errors && formGroup.get('nomeComum')?.touched">
+            {{this.getErrorMessages('nomeComum', this.formGroup.get('nomeComum')?.errors)}}
+
+            @if (formGroup.get('nomeComum')?.hasError('apiError')) {
+              <span>{{formGroup.get('nomeComum')?.getError('apiError')}}</span>
+            }
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="full-width-input">
+          <mat-label>Categoria Biológica</mat-label>
+
+          <mat-select formControlName="idCategoriaBiologica">
+            @for (categoria of categoriasPlantas; track categoria.id) {
+              @if (categoria.tipoCategoria.id === 1) {
+                <mat-option [value]="categoria.id">{{categoria.nome}}</mat-option>
+              }
+            }
+          </mat-select>
+          <mat-hint>
+            {{ getCategoriaPlantaDescription(formGroup.get('idCategoriaBiologica')?.value) }}
+          </mat-hint>
+
+          <mat-error *ngIf="formGroup.get('categoriaBiologica')?.errors && formGroup.get('categoriaBiologica')?.touched">
+            {{this.getErrorMessages('categoriaBiologica', this.formGroup.get('categoriaBiologica')?.errors)}}
+
+
+            @if (formGroup.get('categoriaBiologica')?.hasError('apiError')) {
+              <span>{{formGroup.get('categoriaBiologica')?.getError('apiError')}}</span>
+            }
+          </mat-error>
+        </mat-form-field>
+
+
+        <mat-form-field appearance="fill" class="full-width-input">
+          <mat-label>Fornecedor</mat-label>
+
+          <mat-select formControlName="idFornecedor">
+            @for (fornecedor of fornecedores; track fornecedor.id) {
+              <mat-option [value]="fornecedor.id">{{fornecedor.nome}} (cnpj: {{fornecedor.cnpj}})</mat-option>
+            }
+          </mat-select>
+
+          <mat-error *ngIf="formGroup.get('idFornecedor')?.errors && formGroup.get('idFornecedor')?.touched">
+            {{this.getErrorMessages('idFornecedor', this.formGroup.get('idFornecedor')?.errors)}}
+
+
+            @if (formGroup.get('idFornecedor')?.hasError('apiError')) {
+              <span>{{formGroup.get('idFornecedor')?.getError('apiError')}}</span>
+            }
+          </mat-error>
+        </mat-form-field>
+
+      </form>
+    </mat-card-content>
+    <mat-card-actions>
+      <button mat-raised-button
+        color="primary"
+        (click)="salvar()"
+      >
+        Salvar
+      </button>
+      <button mat-raised-button
+        *ngIf="formGroup?.get('id')?.value"
+        color="warn"
+        (click)="excluir()"
+        [disabled]="this.formGroup.invalid"
+      >
+        Excluir
+      </button>
+      <button mat-raised-button
+        routerLink="/plantas"
+      >
+        cancelar
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</div>
+
+<!-- <form [formGroup]="formGroup" (ngSubmit)="onSubmit()"></form></form>-->

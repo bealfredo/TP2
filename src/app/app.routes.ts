@@ -17,6 +17,10 @@ import { FornecedorListComponent } from './components/fornecedor/fornecedor-list
 import { FornecedorFormComponent } from './components/fornecedor/fornecedor-form/fornecedor-form.component';
 import { fornecedorResolver } from './components/fornecedor/resolver/fornecedor-resolver';
 import { telefoneResolver } from './components/telefone/resolver/telefone-resolver';
+import { PlantaListComponent } from './components/planta/planta-list/planta-list.component';
+import { PlantaFormComponent } from './components/planta/planta-form/planta-form.component';
+import { plantaResolver } from './components/planta/resolver/planta-resolver';
+import { PlantaRascunhoFormComponent } from './components/planta/plantaRascunho-form/plantaRascunho-form.component';
 
 export const routes: Routes = [
     { path: 'estados', component: EstadoListComponent, title: 'Lista de Estados'},
@@ -43,4 +47,7 @@ export const routes: Routes = [
     { path: 'telefones/new', component: TelefoneFormComponent, title: 'Novo Telefone'},
     { path: 'telefones/edit/:id', component: TelefoneFormComponent, resolve:{telefone: telefoneResolver}, title: "Editar Telefone"},
 
+    { path: 'plantas', component: PlantaListComponent, title: 'Lista de Plantas'},
+    { path: 'plantas/new', component: PlantaRascunhoFormComponent, title: 'Nova Planta'},
+    { path: 'plantas/edit/:id', component: PlantaFormComponent, resolve:{planta: plantaResolver}, title: 'Editar Planta'},
 ];
