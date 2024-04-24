@@ -1,6 +1,8 @@
 import { Routes } from '@angular/router';
 import { EstadoListComponent } from './components/estado/estado-list/estado-list.component';
 import { EstadoFormComponent } from './components/estado/estado-form/estado-form.component';
+import { TelefoneListComponent } from './components/telefone/telefone-list/telefone-list.component';
+import { TelefoneFormComponent } from './components/telefone/telefone-form/telefone-form.component';
 import { estadoResolver } from './components/estado/resolver/estado-resolver';
 import { CidadeListComponent } from './components/cidade/cidade-list/cidade-list.component';
 import { CidadeFormComponent } from './components/cidade/cidade-form/cidade-form.component';
@@ -14,6 +16,7 @@ import { TagListComponent } from './components/tag/tag-list/tag-list.component';
 import { FornecedorListComponent } from './components/fornecedor/fornecedor-list/fornecedor-list.component';
 import { FornecedorFormComponent } from './components/fornecedor/fornecedor-form/fornecedor-form.component';
 import { fornecedorResolver } from './components/fornecedor/resolver/fornecedor-resolver';
+import { telefoneResolver } from './components/telefone/resolver/telefone-resolver';
 
 export const routes: Routes = [
     { path: 'estados', component: EstadoListComponent, title: 'Lista de Estados'},
@@ -36,5 +39,8 @@ export const routes: Routes = [
     { path: 'fornecedores/new', component: FornecedorFormComponent, title: 'Novo Fornecedor'},
     { path: 'fornecedores/edit/:id', component: FornecedorFormComponent, resolve:{fornecedor: fornecedorResolver}, title: 'Editar Fornecedor'},
 
+    { path: 'telefones', component: TelefoneListComponent, title: 'Lista de Telefones'},
+    { path: 'telefones/new', component: TelefoneFormComponent, title: 'Novo Telefone'},
+    { path: 'telefones/edit/:id', component: TelefoneFormComponent, resolve:{telefone: telefoneResolver}, title: "Editar Telefone"},
 
 ];

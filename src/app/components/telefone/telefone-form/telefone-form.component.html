@@ -1,0 +1,62 @@
+<!-- <mat-toolbar color="primary" class="toolbar-title">Cadastro de Categoria de Planta</mat-toolbar> -->
+
+<div class="pageContent">
+  <div class="header">
+    <h1>Editar Telefone</h1>
+  </div>
+
+  <mat-card class="card">
+    <mat-card-content>
+      <form [formGroup]="formGroup">
+
+        <mat-form-field appearance="fill" class="full-width-input">
+          <mat-label>DDD</mat-label>
+          <input matInput type="text" formControlName="ddd">
+
+          <mat-error *ngIf="formGroup.get('ddd')?.errors && formGroup.get('ddd')?.touched">
+            {{this.getErrorMessages('ddd', this.formGroup.get('ddd')?.errors)}}
+
+            @if (formGroup.get('ddd')?.hasError('apiError')) {
+              <span>{{formGroup.get('ddd')?.getError('apiError')}}</span>
+            }
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="full-width-input">
+          <mat-label>Numero</mat-label>
+          <input matInput type="numero" formControlName="numero">
+
+          <mat-error *ngIf="formGroup.get('numero')?.errors && formGroup.get('numero')?.touched">
+            {{this.getErrorMessages('numero', this.formGroup.get('numero')?.errors)}}
+
+            @if (formGroup.get('numero')?.hasError('apiError')) {
+              <span>{{formGroup.get('numero')?.getError('apiError')}}</span>
+            }
+          </mat-error>
+        </mat-form-field>
+
+      </form>
+    </mat-card-content>
+    <mat-card-actions>
+      <button mat-raised-button
+        color="primary"
+        (click)="salvar()"
+      >
+        Salvar
+      </button>
+      <button mat-raised-button
+        *ngIf="formGroup?.get('id')?.value"
+        color="warn"
+        (click)="excluir()"
+        [disabled]="this.formGroup.invalid"
+      >
+        Excluir
+      </button>
+      <button mat-raised-button
+        routerLink="/telefones"
+      >
+        cancelar
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</div>
