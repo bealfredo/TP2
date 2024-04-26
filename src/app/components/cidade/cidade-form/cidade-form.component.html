@@ -1,39 +1,61 @@
-<mat-toolbar color="primary" class="toolbar-title">Cadastro de Cidade</mat-toolbar>
-<div class="form-container">
-  <mat-card>
+<!-- <mat-toolbar color="primary" class="toolbar-title">Cadastro de Categoria de Planta</mat-toolbar> -->
+
+<div class="pageContent">
+  <div class="header">
+    <h1>Editar Cidade</h1>
+  </div>
+
+  <mat-card class="card">
     <mat-card-content>
       <form [formGroup]="formGroup">
 
         <mat-form-field appearance="fill" class="full-width-input">
           <mat-label>Nome</mat-label>
           <input matInput type="text" formControlName="nome">
-          <mat-error *ngIf="formGroup.get('nome')
-                          && formGroup.get('nome')?.invalid
-                          && formGroup.get('nome')?.touched">
-            O nome é obrigatório.
+
+          <mat-error *ngIf="formGroup.get('nome')?.errors && formGroup.get('nome')?.touched">
+            {{this.getErrorMessages('nome', this.formGroup.get('nome')?.errors)}}
+
+            @if (formGroup.get('nome')?.hasError('apiError')) {
+              <span>{{formGroup.get('nome')?.getError('apiError')}}</span>
+            }
           </mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="fill" class="full-width-input">
           <mat-label>Estado</mat-label>
-          <mat-select formControlName="estado" id="estado_id">
+          <mat-select formControlName="estado">
             @for (estado of estados; track estado.id) {
-              <mat-option [value]="estado">{{estado.nome}}</mat-option>
-            }
+              <mat-option [value]="estado.id">{{estado.nome}}</mat-option>}
           </mat-select>
-          <mat-error *ngIf="formGroup.get('estado')
-                          && formGroup.get('estado')?.invalid
-                          && formGroup.get('estado')?.touched">
-            O estado é obrigatória.
+          <mat-error *ngIf="formGroup.get('estado')?.errors && formGroup.get('estado')?.touched">
+            {{this.getErrorMessages('estado', this.formGroup.get('estado')?.errors)}}
+
+            @if (formGroup.get('estado')?.hasError('apiError')) {
+              <span>{{formGroup.get('estado')?.getError('apiError')}}</span>
+            }
           </mat-error>
         </mat-form-field>
+
+        <mat-form-field appearance="fill" class="full-width-input">
+          <mat-label>Frete</mat-label>
+          <input matInput type="number" formControlName="frete">
+
+          <mat-error *ngIf="formGroup.get('frete')?.errors && formGroup.get('frete')?.touched">
+            {{this.getErrorMessages('frete', this.formGroup.get('frete')?.errors)}}
+
+            @if (formGroup.get('frete')?.hasError('apiError')) {
+              <span>{{formGroup.get('frete')?.getError('apiError')}}</span>
+            }
+          </mat-error>
+        </mat-form-field>
+
       </form>
     </mat-card-content>
     <mat-card-actions>
       <button mat-raised-button
         color="primary"
         (click)="salvar()"
-        [disabled]="this.formGroup.invalid"
       >
         Salvar
       </button>
@@ -41,7 +63,6 @@
         *ngIf="formGroup?.get('id')?.value"
         color="warn"
         (click)="excluir()"
-        [disabled]="this.formGroup.invalid"
       >
         Excluir
       </button>
@@ -53,4 +74,7 @@
     </mat-card-actions>
   </mat-card>
 </div>
+
+<!-- <form [formGroup]="formGroup" (ngSubmit)="onSubmit()"></form></form>-->
+
 

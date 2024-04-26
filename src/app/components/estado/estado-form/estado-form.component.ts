@@ -37,7 +37,8 @@ export class EstadoFormComponent {
       nome: [(estado && estado.nome) ? estado.nome : '',
       Validators.compose([
         Validators.required,
-        Validators.minLength(4)
+        Validators.minLength(4),
+        Validators.pattern(/^[a-zA-Z ]$/)
       ])],
       sigla: [(estado && estado.sigla) ? estado.sigla : '',
       Validators.compose([

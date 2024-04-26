@@ -38,13 +38,15 @@ export class TelefoneFormComponent {
       Validators.compose([
         Validators.required,
         Validators.minLength(2),
-        Validators.maxLength(2)
+        Validators.maxLength(2),
+        Validators.pattern(/^[0-9]{2}$/)
       ])],
       numero: [(telefone && telefone.numero) ? telefone.numero : '',
       Validators.compose([
         Validators.required,
         Validators.minLength(9),
-        Validators.maxLength(9)
+        Validators.maxLength(9),
+        Validators.pattern(/^[0-9]{9}$/)
       ])],
     })
   }
@@ -110,12 +112,14 @@ export class TelefoneFormComponent {
       required: 'O ddd deve ser informado.',
       minlength: 'O ddd deve ter 2 caracteres.',
       maxlength: 'O ddd deve ter 2 caracteres.',
+      pattern: 'O ddd deve conter apenas numeros',
       apiError: ' ' // mensagem da api
     },
     numero: {
       required: 'A numero deve ser informado.',
       minlength: 'O numero deve ter 9 caracteres.',
       maxlength: 'O numero deve ter 9 caracteres.',
+      pattern: 'O numero deve conter apenas numeros',
       apiError: ' ' // mensagem da api
     }
   }
