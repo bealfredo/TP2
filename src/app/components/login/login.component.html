@@ -1,0 +1,52 @@
+<div class="login-container">
+    @if(!getPerfilName()) {
+      <div class="login-box">
+        <h2>Selecione o tipo de usuário</h2>
+        <br>
+        <button mat-raised-button color="primary" type="button" (click)="goToPerfil(3)">Cliente</button>
+        <br><br><br>
+        <button mat-raised-button color="primary" type="button" (click)="goToPerfil(1)">Administrador</button>
+        <br><br><br>
+        <button mat-raised-button color="primary" type="button" (click)="goToPerfil(3)">Entregador</button>
+      </div>
+    }
+
+    @if(getPerfilName()) {
+      <div class="login-box">
+          <h2 class="login-title">Login - {{getPerfilName()}}</h2>
+          <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+              <mat-form-field appearance="fill" class="full-width-input">
+                <mat-label>Email</mat-label>
+                <input matInput type="text" formControlName="email">
+
+                <mat-error *ngIf="formGroup.get('email')?.errors && formGroup.get('email')?.touched">
+                  {{this.getErrorMessages('email', this.formGroup.get('email')?.errors)}}
+
+                  @if (formGroup.get('email')?.hasError('apiError')) {
+                    <span>{{formGroup.get('email')?.getError('apiError')}}</span>
+                  }
+                </mat-error>
+              </mat-form-field>
+
+              <mat-form-field appearance="fill" class="full-width-input">
+                <mat-label>Senha</mat-label>
+                <input matInput type="password" formControlName="password">
+
+                <mat-error *ngIf="formGroup.get('password')?.errors && formGroup.get('password')?.touched">
+                  {{this.getErrorMessages('password', this.formGroup.get('password')?.errors)}}
+
+                  @if (formGroup.get('password')?.hasError('apiError')) {
+                    <span>{{formGroup.get('password')?.getError('apiError')}}</span>
+                  }
+                </mat-error>
+              </mat-form-field>
+
+              <mat-error *ngIf="errorMessage">
+                {{errorMessage}}
+              </mat-error>
+
+              <button mat-raised-button class="login-button" color="primary" type="submit">Login</button>
+          </form>
+      </div>
+    }
+</div>
