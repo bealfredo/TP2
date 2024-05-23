@@ -4,4 +4,5 @@ export class Cidade {
   id!: number;
   nome!: string;
   estado!: Estado;
+  frete!: number;
 }

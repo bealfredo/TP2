@@ -12,6 +12,7 @@ import { FornecedorService } from '../../../services/fornecedor.service';
 import { CommonModule } from '@angular/common';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+import { Telefone } from '../../../models/telefone.model';
 
 @Component({
   selector: 'app-fornecedor-list',
@@ -42,10 +43,15 @@ export class FornecedorListComponent implements OnInit {
     return cnpj;
   }
 
-  formatarTelefone(telefone: string): string {
-    if (telefone && telefone.length === 11) {
-      return `(${telefone.substring(0, 2)}) ${telefone.substring(2, 7)}-${telefone.substring(7, 11)}`;
+  formatarTelefone(telefone: Telefone): string {
+    // if (telefone && telefone.length === 11) {
+    //   return `(${telefone.substring(0, 2)}) ${telefone.substring(2, 7)}-${telefone.substring(7, 11)}`;
+    // }
+
+    if (telefone) {
+      return `(${telefone.ddd}) ${telefone.numero}`;
     }
+
     return telefone;
   }
 
@@ -63,8 +69,8 @@ export class FornecedorListComponent implements OnInit {
       this.orderByNome();
     } else if (orderBy === 'email') {
       this.orderByEmail();
-    } else if (orderBy === 'telefone') {
-      this.orderByTelefone();
+    // } else if (orderBy === 'telefone') {
+    //   this.orderByTelefone();
     } else if (orderBy === 'cnpj') {
       this.orderByCnpj();
     }
@@ -109,22 +115,22 @@ export class FornecedorListComponent implements OnInit {
     this.fornecedores = [...this.fornecedores];
   }
 
-  orderByTelefone(): void {
-    this.fornecedores.sort((a, b) => {
-      const telefoneA = a.telefone.toLowerCase();
-      const telefoneB = b.telefone.toLowerCase();
+  // orderByTelefone(): void {
+  //   this.fornecedores.sort((a, b) => {
+  //     const telefoneA = a.telefone.toLowerCase();
+  //     const telefoneB = b.telefone.toLowerCase();
 
-      if (telefoneA < telefoneB) {
-        return -1;
-      }
-      if (telefoneA > telefoneB) {
-        return 1;
-      }
-      return 0;
-    });
+  //     if (telefoneA < telefoneB) {
+  //       return -1;
+  //     }
+  //     if (telefoneA > telefoneB) {
+  //       return 1;
+  //     }
+  //     return 0;
+  //   });
 
-    this.fornecedores = [...this.fornecedores];
-  }
+  //   this.fornecedores = [...this.fornecedores];
+  // }
 
   orderByCnpj(): void {
     this.fornecedores.sort((a, b) => {
