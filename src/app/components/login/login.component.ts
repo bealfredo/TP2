@@ -119,6 +119,7 @@ export class LoginComponent implements OnInit {
   getPerfilName() {
     switch (this.idTipoPerfil) {
       case 1:
+        return 'Proprietário';
       case 2:
         return 'Administrador';
       case 3:

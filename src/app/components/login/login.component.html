@@ -5,9 +5,11 @@
         <br>
         <button mat-raised-button color="primary" type="button" (click)="goToPerfil(3)">Cliente</button>
         <br><br><br>
-        <button mat-raised-button color="primary" type="button" (click)="goToPerfil(1)">Administrador</button>
+        <button mat-raised-button color="primary" type="button" (click)="goToPerfil(1)">Proprietário</button>
         <br><br><br>
-        <button mat-raised-button color="primary" type="button" (click)="goToPerfil(3)">Entregador</button>
+        <button mat-raised-button color="primary" type="button" (click)="goToPerfil(2)">Administrador</button>
+        <br><br><br>
+        <button mat-raised-button color="primary" type="button" (click)="goToPerfil(4)">Entregador</button>
       </div>
     }
 
@@ -44,6 +46,10 @@
               <mat-error *ngIf="errorMessage">
                 {{errorMessage}}
               </mat-error>
+
+              <a routerLink="/login">
+                <span>Entrar como outro usuário</span>
+              </a>
 
               <button mat-raised-button class="login-button" color="primary" type="submit">Login</button>
           </form>
