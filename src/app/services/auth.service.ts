@@ -7,7 +7,7 @@ import { Admin } from '../models/admin.model';
 import { Cliente } from '../models/cliente.model';
 import { Entregador } from '../models/entregador.model';
 
-type UsuarioLogado = Admin | Cliente | Entregador;
+export type UsuarioLogado = Admin | Cliente | Entregador;
 
 @Injectable({
   providedIn: 'root'
