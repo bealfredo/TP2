@@ -1,0 +1,49 @@
+.navbar {
+  /* border: 1px solid red; */
+  position: fixed;
+  z-index: 10;
+  top: 20px;
+  left: 50%;
+  height: 60px;
+  transform: translateX(-50%);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  padding: 0 20px;
+
+  backdrop-filter: blur(4px);
+  background-color: rgba(0, 0, 0, 0.8);
+  color: whitesmoke;
+
+  border-radius: 20px;
+
+  font-size: 2px
+}
+
+.navbar * {
+  font-size: 26px;
+}
+
+.navButton {
+  background-color: transparent;
+  font-size: 20px !important;
+}
+.navButton i {
+  font-size: 20px !important;
+}
+
+.profileButton {
+  font-size: 20px !important;
+  background-color: transparent;
+}
+
+.iconMenu {
+  font-size: 26px !important;
+  margin-right: 10px;
+}
+
+mat-icon-button {
+  border: 2px solid red !important;
+}

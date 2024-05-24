@@ -1,0 +1,47 @@
+<div class="navbar">
+    <button (click)="clickMenu()" mat-fab class="navButton menu">
+      <mat-icon>menu</mat-icon>
+    </button>
+
+    <button routerLink="/" mat-fab class="navButton profileButton">
+      <i class="fa-solid fa-house"></i>
+    </button>
+
+    <button routerLink="/admin" mat-fab class="navButton settings">
+      <i class="fa-solid fa-gear"></i>
+    </button>
+
+    <button mat-fab class="navButton carrinho">
+      <!-- <mat-icon [matBadge]="qtdItensCarrinho"  matBadgeColor="warn" matBadgePosition="after" matBadgeOverlap="false"> -->
+        <i class="fa-solid fa-cart-shopping"></i>
+      <!-- </mat-icon> -->
+    </button>
+
+    @if (usuarioLogado) {
+      <button mat-fab extended [matMenuTriggerFor]="menu" class="navButton profileButton">
+        <i class="fa-solid fa-circle-user"></i>
+        {{usuarioLogado.nome.split(' ')[0]}}
+      </button>
+      <mat-menu #menu="matMenu">
+        <button mat-menu-item>
+          <span class="iconMenu">
+            <i class="fa-solid fa-circle-user"></i>
+          </span>
+          <span>Meu perfil</span>
+        </button>
+        <button mat-menu-item (click)="deslogar()">
+          <span class="iconMenu">
+            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+          </span>
+          <span>Deslogar</span>
+        </button>
+      </mat-menu>
+    }
+
+    @if (!usuarioLogado) {
+      <button routerLink="/login" mat-fab extended class="navButton profileButton">
+        <i class="fa-solid fa-circle-user"></i>
+        Entrar
+      </button>
+    }
+  </div>

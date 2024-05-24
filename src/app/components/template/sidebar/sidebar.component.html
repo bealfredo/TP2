@@ -1,0 +1,22 @@
+<div class="sidebar">
+  <mat-drawer #drawer  mode="side" [opened]="isOpen">
+      <mat-toolbar>
+          <span>Menu</span>
+      </mat-toolbar>
+      <mat-nav-list>
+          <mat-list-item routerLink="/">Home</mat-list-item>
+          <mat-list-item routerLink="/admin/estados">Estado</mat-list-item>
+          <mat-list-item routerLink="/admin/cidades">Cidades</mat-list-item>
+          <mat-list-item routerLink="/admin/categoriasplanta">Categoria Planta</mat-list-item>
+          <mat-list-item routerLink="/admin/tags">Tags</mat-list-item>
+          <mat-list-item routerLink="/admin/fornecedores">Fornecedores</mat-list-item>
+          <mat-list-item routerLink="/admin/plantas">Plantas</mat-list-item>
+      </mat-nav-list>
+  </mat-drawer>
+</div>
+
+<mat-drawer-container class="container">
+    <mat-drawer-content [class]="isOpen ? 'sidemenu-open' : 'sidemenu-closed'">
+        <router-outlet></router-outlet>
+    </mat-drawer-content>
+</mat-drawer-container>
