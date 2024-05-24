@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, OnInit } from '@angular/core';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { LocalStorageService, keyLocalStorage } from './local-storage.service';
 import { JwtHelperService } from '@auth0/angular-jwt';
@@ -21,19 +21,22 @@ export class AuthService {
 
   constructor(private http: HttpClient,
               private localStorageService: LocalStorageService,
-              private jwtHelper: JwtHelperService) {
-
-    this.initUsuarioLogado();
+              private jwtHelper: JwtHelperService
+  ) {
 
   }
 
-  private initUsuarioLogado() {
-    const usuario = localStorage.getItem(this.usuarioLogadoKey);
-    if (usuario) {
-      const usuarioLogado = JSON.parse(usuario);
-
-      this.setUsuarioLogado(usuarioLogado);
-      this.usuarioLogadoSubject.next(usuarioLogado);
+  initUsuarioLogado() {
+    console.log("initUsuarioLogado")
+    const token = this.getToken();
+    if (token) {
+      this.userInfo().subscribe({
+        error: (err) => {
+          // this.removeToken();
+          // this.removeUsuarioLogado();
+        }
+      },
+      );
     }
   }
 
@@ -51,12 +54,23 @@ export class AuthService {
         const authToken = res.headers.get('Authorization') ?? '';
         if (authToken) {
           this.setToken(authToken);
-          const usuarioLogado = res.body;
-          if (usuarioLogado) {
-            this.setUsuarioLogado(usuarioLogado);
-            this.usuarioLogadoSubject.next(usuarioLogado);
-          }
+          this.initUsuarioLogado();
+          // const usuarioLogado = res.body;
+          // if (usuarioLogado) {
+          //   this.setUsuarioLogado(usuarioLogado);
+          //   this.usuarioLogadoSubject.next(usuarioLogado);
+          // }
         }
+      })
+    );
+  }
+
+  userInfo(): Observable<UsuarioLogado> {
+    return this.http.get<UsuarioLogado>(`${this.baseURL}/userinfo`).pipe(
+      tap(usuario => {
+        this.setUsuarioLogado(usuario);
+        this.usuarioLogadoSubject.next(usuario);
+        this.localStorageService.setItem(this.usuarioLogadoKey, usuario);
       })
     );
   }

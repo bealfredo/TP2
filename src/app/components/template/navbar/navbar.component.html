@@ -17,23 +17,31 @@
       <!-- </mat-icon> -->
     </button>
 
-    <button mat-fab extended [matMenuTriggerFor]="menu" class="navButton profileButton">
-      <i class="fa-solid fa-circle-user"></i>
-      Entrar
-    </button>
+    @if (usuarioLogado) {
+      <button mat-fab extended [matMenuTriggerFor]="menu" class="navButton profileButton">
+        <i class="fa-solid fa-circle-user"></i>
+        {{usuarioLogado.nome.split(' ')[0]}}
+      </button>
+      <mat-menu #menu="matMenu">
+        <button mat-menu-item>
+          <span class="iconMenu">
+            <i class="fa-solid fa-circle-user"></i>
+          </span>
+          <span>Meu perfil</span>
+        </button>
+        <button mat-menu-item (click)="deslogar()">
+          <span class="iconMenu">
+            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+          </span>
+          <span>Deslogar</span>
+        </button>
+      </mat-menu>
+    }
 
-    <mat-menu #menu="matMenu">
-      <button mat-menu-item>
-        <span class="iconMenu">
-          <i class="fa-solid fa-circle-user"></i>
-        </span>
-        <span>Meu perfil</span>
+    @if (!usuarioLogado) {
+      <button routerLink="/login" mat-fab extended class="navButton profileButton">
+        <i class="fa-solid fa-circle-user"></i>
+        Entrar
       </button>
-      <button mat-menu-item (click)="deslogar()">
-        <span class="iconMenu">
-          <i class="fa-solid fa-arrow-right-from-bracket"></i>
-        </span>
-        <span>Deslogar</span>
-      </button>
-    </mat-menu>
+    }
   </div>
