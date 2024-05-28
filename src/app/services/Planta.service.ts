@@ -60,4 +60,25 @@ export class PlantaService {
     return this.httpClient.delete<any>(`${this.baseUrl}/${planta.id}`)
   }
 
+  // images
+
+  getUrlImagem(planta: Planta, nomeImagem: string): string {
+    return `${this.baseUrl}/${planta.id}/download/imagem/${nomeImagem}`;
+  }
+
+  uploadImagem(id: number, imagem: File): Observable<any> {
+    const formData: FormData = new FormData();
+    formData.append('id', id.toString());
+    formData.append('imagem', imagem, imagem.name);
+    return this.httpClient.patch<Planta>(`${this.baseUrl}/${id}/upload/imagem`, formData);
+  }
+
+  deleteImagem(id: number, nomeImagem: string): Observable<any> {
+    return this.httpClient.request('patch', `${this.baseUrl}/${id}/delete/imagem/${nomeImagem}`);
+  }
+
+  setImagemPrincipal(id: number, nomeImagem: string): Observable<any> {
+    return this.httpClient.request('patch', `${this.baseUrl}/${id}/update/imagemprincipal/${nomeImagem}`);
+  }
+
 }

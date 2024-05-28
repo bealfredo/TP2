@@ -8,6 +8,40 @@
 
   <mat-card class="card">
     <mat-card-content>
+      <button mat-fab extended matSuffix (click)="fileInput.click()" color="accent">
+        <input type="file" (change)="uploadImagem($event)" hidden #fileInput accept="image/*">
+        <mat-icon>folder_open</mat-icon>
+        Adicionar imagem
+      </button>
+
+      <div class="images">
+        @if (planta && planta.imagens.length > 0) {
+          @for (image of planta.imagens; track image) {
+            <div class="image">
+              <img mat-card-image [src]="getUrlImagem(image)" width="200px">
+
+              <!-- floating button remove -->
+              <button mat-mini-fab (click)="deleteImagem(image)">
+                <mat-icon>delete</mat-icon>
+              </button>
+
+              <!-- <button mat-icon-button>
+                <mat-icon>folder_open</mat-icon>
+            </button> -->
+
+            <!-- definir como imagem principal -->
+            @if (planta.imagemPrincipal != image) {
+              <button mat-mini-fab color="primary" (click)="setImagemPrincipal(image)">
+                <mat-icon>star</mat-icon>
+              </button>
+            }
+            </div>
+          }
+        }
+      </div>
+    </mat-card-content>
+
+    <mat-card-content>
       <form [formGroup]="formGroup">
 
         <mat-form-field appearance="fill" class="full-width-input">
