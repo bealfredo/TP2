@@ -1,36 +1,34 @@
 import { AsyncPipe, NgIf } from '@angular/common';
-import {COMMA, ENTER} from '@angular/cdk/keycodes';
 
+import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, ElementRef, ViewChild } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatExpansionModule } from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatSlideToggle } from '@angular/material/slide-toggle';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { Planta } from '../../../models/planta.model';
-import {MatSelectModule} from '@angular/material/select';
-import {MatCheckboxModule} from '@angular/material/checkbox';
-import { TipoCategoria } from '../../../models/tipoCategoria.model';
-import { CommonModule } from '@angular/common';
-import { CategoriaPlanta } from '../../../models/categoriaPlanta.model';
-import { CategoriaPlantaService } from '../../../services/categoriaPlanta.service';
-import { MatSlideToggle } from '@angular/material/slide-toggle';
-import { PlantaService } from '../../../services/Planta.service';
-import { StatusPlanta } from '../../../models/StatusPlanta.model';
 import { NivelDificuldade } from '../../../models/NivelDificuldade.model';
 import { NivelToxicidade } from '../../../models/NivelToxicidade.model';
 import { PortePlanta } from '../../../models/PortePlanta.model';
-import { FornecedorService } from '../../../services/fornecedor.service';
+import { StatusPlanta } from '../../../models/StatusPlanta.model';
+import { CategoriaPlanta } from '../../../models/categoriaPlanta.model';
 import { Fornecedor } from '../../../models/fornecedor.model';
-import {MatChipInputEvent, MatChipsModule} from '@angular/material/chips';
-import { MatIconModule } from '@angular/material/icon';
-import {MatAutocompleteSelectedEvent, MatAutocompleteModule} from '@angular/material/autocomplete';
-import { Observable } from 'rxjs';
-import { TagService } from '../../../services/tag.service';
+import { Planta } from '../../../models/planta.model';
 import { Tag } from '../../../models/tag.model';
+import { PlantaService } from '../../../services/Planta.service';
+import { CategoriaPlantaService } from '../../../services/categoriaPlanta.service';
+import { FornecedorService } from '../../../services/fornecedor.service';
+import { TagService } from '../../../services/tag.service';
 
 
 @Component({
@@ -38,7 +36,8 @@ import { Tag } from '../../../models/tag.model';
   standalone: true,
   imports: [NgIf, ReactiveFormsModule, MatFormFieldModule, MatInputModule,
     MatButtonModule, MatCardModule, MatToolbarModule, RouterModule, MatSelectModule,
-    MatCheckboxModule, CommonModule, MatSlideToggle, MatChipsModule, FormsModule, MatIconModule, MatAutocompleteModule, AsyncPipe],
+    MatCheckboxModule, CommonModule, MatSlideToggle, MatChipsModule, FormsModule, MatIconModule, MatAutocompleteModule, AsyncPipe,
+    MatExpansionModule],
   templateUrl: './planta-form.component.html',
   styleUrl: './planta-form.component.css'
 })
@@ -114,6 +113,12 @@ export class PlantaFormComponent {
       this.tags = data;
     })
     this.initializeForm();
+
+    // abrir em dados da planta se tiver configurado a planta pela primeira vez
+    this.step = this.planta?.codigo ? 0 : 2;
+
+    // fast changes
+    this.selectedStatusPlanta = this.planta?.statusPlanta.id || 0;
   }
 
   initializeForm(): void {
@@ -475,7 +480,98 @@ export class PlantaFormComponent {
     })
   }
 
+  // expanded
+  step = 0;
+
+  setStep(index: number) {
+    this.step = index;
+  }
+
+  nextStep() {
+    this.step++;
+  }
+
+  prevStep() {
+    this.step--;
+  }
+
+  // fast changes
+
+  selectedStatusPlanta = 0;
+
+  trackById(index: number, item: any): number {
+    return item.id;
+  }
+
+  updateStatusPlanta(event: any) {
+    if (!this.planta) { return; }
+
+    const dto = { idStatus: event.value};
+
+    this.plantaService.updateStatusplanta(dto, this.planta.id)
+    .subscribe({
+      next: () => {
+        // ! make a toast and send loading
+        window.alert('Status da planta alterado com sucesso');
+        this.reloadPlanta();
+      },
+      error: err => {
+        // ! make a toast
+        console.log('Erro ao alterar o status da planta', err);
+        window.alert('Erro ao alterar o status da planta' );
+        this.selectedStatusPlanta = this.planta?.statusPlanta.id || 0;
+        // tratar o erro
+      }
+    })
+  }
+
+  @ViewChild('addRemoveQuantidadeInput') addRemoveQuantidadeInput!: ElementRef;
+
+  updateQuantidade(type: 'add' | 'remove') {
+    if (!this.planta) { return; }
+
+    const value = this.addRemoveQuantidadeInput.nativeElement.value;
+
+    if (!value) { return; }
+
+    const quantidade = parseInt(type === 'add' ? value : '-' + value);
+    const dto = { quantidade };
+
+    this.plantaService.updateQuantidade(dto, this.planta.id)
+    .subscribe({
+      next: () => {
+        // ! make a toast and send loading
+        window.alert('Quantidade da planta alterada com sucesso');
+        this.reloadPlanta();
+        // clear input
+        this.addRemoveQuantidadeInput.nativeElement.value = '';
+      },
+      error: err => {
+        // ! make a toast
+        console.log('Erro ao alterar a quantidade da planta', err);
+        window.alert('Erro ao alterar a quantidade da planta' );
+        // tratar o erro
+      }
+    })
+  }
+
+  quantidadeToRemoveIsOk() {
+    if (!this.planta) { return false; }
+    if (!this.addRemoveQuantidadeInput) { return false; }
+
+    const value = this.addRemoveQuantidadeInput.nativeElement.value;
+
+    return value > 0 && value <= this.planta.quantidadeDisponivel;
+  }
+
+  quantidadeToAddIsOk() {
+    if (!this.planta) { return false; }
+    if (!this.addRemoveQuantidadeInput) { return false; }
+
+    const value = this.addRemoveQuantidadeInput.nativeElement.value;
+
+    return value > 0;
+  }
+
+
 }
-
-
-// aaaaa

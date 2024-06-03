@@ -8,12 +8,11 @@
 }
 
 .images .image {
-  --border-color: rgba(0, 0, 0, 0.1);
   width: 200px;
   height: 200px;
   border-radius: 10px;
-  box-shadow: 4px 4px 0px var(--border-color);
-  border: 1px solid var(--border-color);
+  box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .images .image img {

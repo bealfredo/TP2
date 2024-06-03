@@ -8,6 +8,80 @@
 
   <mat-card class="card">
     <mat-card-content>
+
+      <h2>Dados Atuais da planta</h2>
+
+    </mat-card-content>
+  </mat-card>
+
+
+
+
+  <mat-accordion class="example-headers-align">
+    <mat-expansion-panel [expanded]="step === 0" (opened)="setStep(0)" [disabled]="!planta?.codigo?.trim()">
+
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <h2>Configurações rápidas</h2>
+        </mat-panel-title>
+
+        @if(!planta?.codigo) {
+          <mat-panel-description>
+            <mat-icon>error</mat-icon>
+            Disponível apenas após configurar os dados da planta.
+          </mat-panel-description>
+        }
+
+      </mat-expansion-panel-header>
+
+      <div>
+        <h4>Status da planta</h4>
+
+        <mat-form-field appearance="fill" class="full-width-input">
+          <mat-label>Status Planta</mat-label>
+
+          <mat-select id="fastStatusPlanta" [(value)]="selectedStatusPlanta" (selectionChange)="updateStatusPlanta($event)">
+            <mat-option *ngFor="let statusPlanta of statusPlantas; trackBy: trackById" [value]="statusPlanta.id">
+              {{ statusPlanta.label }}
+            </mat-option>
+          </mat-select>
+          <mat-hint>
+            {{ getStatusPlantaDescription(selectedStatusPlanta) }}
+          </mat-hint>
+        </mat-form-field>
+      </div>
+
+      <hr>
+
+      <div>
+        <h4>Adicionar | Remover quantidade disponível</h4>
+
+        <mat-form-field appearance="fill" class="full-width-input">
+          <mat-label>Quantidade</mat-label>
+          <input matInput type="number" min="0" #addRemoveQuantidadeInput>
+        </mat-form-field>
+
+        <button mat-raised-button color="primary" style="margin-right: 10px;" (click)="updateQuantidade('add')" [disabled]="!quantidadeToAddIsOk()">
+          <mat-icon>add</mat-icon>
+          Adicionar
+        </button>
+        <button mat-raised-button color="warn" (click)="updateQuantidade('remove')" [disabled]="!quantidadeToRemoveIsOk()">
+          <mat-icon>remove</mat-icon>
+          Remover
+        </button>
+      </div>
+
+
+
+    </mat-expansion-panel>
+
+    <mat-expansion-panel [expanded]="step === 1" (opened)="setStep(1)">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <h2>Imagens</h2>
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+
       <button mat-fab extended matSuffix (click)="fileInput.click()" color="accent">
         <input type="file" (change)="uploadImagem($event)" hidden #fileInput accept="image/*">
         <mat-icon>folder_open</mat-icon>
@@ -39,9 +113,20 @@
           }
         }
       </div>
-    </mat-card-content>
+    </mat-expansion-panel>
 
-    <mat-card-content>
+    <mat-expansion-panel [expanded]="step === 2" (opened)="setStep(2)">
+
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <h2>Dados da planta</h2>
+        </mat-panel-title>
+        <!-- <mat-panel-description>
+          Type your name and age
+          <mat-icon>account_circle</mat-icon>
+        </mat-panel-description> -->
+      </mat-expansion-panel-header>
+
       <form [formGroup]="formGroup">
 
         <mat-form-field appearance="fill" class="full-width-input">
@@ -316,27 +401,41 @@
         </mat-form-field>
 
       </form>
-    </mat-card-content>
-    <mat-card-actions>
-      <button mat-raised-button
-        color="primary"
-        (click)="salvar()"
-      >
-        Salvar
+
+      <mat-card-actions>
+        <button mat-raised-button
+          color="primary"
+          (click)="salvar()"
+        >
+          Salvar
+        </button>
+      </mat-card-actions>
+
+    </mat-expansion-panel>
+
+    <mat-expansion-panel [expanded]="step === 3" (opened)="setStep(3)">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <h2>Ações Críticas</h2>
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+
+      <blockquote class="warn-blockquote">
+        <p>Esta ação não pode ser desfeita!</p>
+
+        <p>
+          <strong>Obserção:</strong>
+          Não será possível excluir a planta se existir outras áreas associadas a ela.
+        </p>
+      </blockquote>
+
+      <button mat-raised-button color="warn" (click)="excluir()" style="width: 100%">
+        Excluir Planta
       </button>
-      <button mat-raised-button
-        color="warn"
-        (click)="excluir()"
-      >
-        Excluir
-      </button>
-      <button mat-raised-button
-        routerLink="/plantas"
-      >
-        cancelar
-      </button>
-    </mat-card-actions>
-  </mat-card>
+    </mat-expansion-panel>
+
+
+  </mat-accordion>
 </div>
 
 <!-- <form [formGroup]="formGroup" (ngSubmit)="onSubmit()"></form></form>-->
