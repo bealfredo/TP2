@@ -14,7 +14,7 @@ export class ErrorInterceptor implements HttpInterceptor {
         const listOfErrors = new Array(401, 403);
         if (listOfErrors.indexOf(error.status) > -1) {
           // Redirecionar para a página de login em caso de não autorizado
-          this.router.navigate(['/login']);
+          this.router.navigate(['/unauthorized']);
         }
 
         // Pode adicionar mais lógica de manipulação de erros conforme necessário

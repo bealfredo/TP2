@@ -24,9 +24,17 @@ import { PlantaRascunhoFormComponent } from './components/planta/plantaRascunho-
 import { LoginComponent } from './components/login/login.component';
 import { ClienteTemplateComponent } from './components/template/cliente-template/cliente-template.component';
 import { AdminTemplateComponent } from './components/template/admin-template/admin-template.component';
+import { authGuard } from './guard/auth.guard';
+import { DesconectedComponent } from './components/errorPages/desconected/desconected.component';
+import { UnauthorizedComponent } from './components/errorPages/unauthorized/unauthorized.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent, title: 'Login'},
+
+  { path: 'desconected', component: DesconectedComponent, title: 'Desconectado'},
+
+  { path: 'unauthorized', component: UnauthorizedComponent, title: 'Não autorizado'},
+
 
   {
     path: '',
@@ -48,8 +56,8 @@ export const routes: Routes = [
       { path: 'cidades/new', component: CidadeFormComponent, title: 'Nova Cidade'},
       { path: 'cidades/edit/:id', component: CidadeFormComponent, resolve:{cidade: cidadeResolver}, title: "Editar Cidade"},
 
-      { path: 'categoriasplanta', component: CategoriaPlantaListComponent, title: 'Lista de Categorias de Plantas'},
-      { path: 'categoriasplanta/new', component: CategoriaPlantaFormComponent, title: 'Nova Categoria de Planta'},
+      { path: 'categoriasplanta', component: CategoriaPlantaListComponent, title: 'Lista de Categorias de Plantas', canActivate: [authGuard]},
+      { path: 'categoriasplanta/new', component: CategoriaPlantaFormComponent, title: 'Nova Categoria de Planta', canActivate: [authGuard]},
       { path: 'categoriasplanta/edit/:id', component: CategoriaPlantaFormComponent, resolve:{categoriaPlanta: categoriaPlantaResolver}, title: 'Editar Categoria de Planta'},
 
       { path: 'tags', component: TagListComponent, title: 'Lista de Tags'},
