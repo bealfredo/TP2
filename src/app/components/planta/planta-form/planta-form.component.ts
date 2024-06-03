@@ -1,36 +1,34 @@
 import { AsyncPipe, NgIf } from '@angular/common';
-import {COMMA, ENTER} from '@angular/cdk/keycodes';
 
+import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, ElementRef, ViewChild } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatExpansionModule } from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatSlideToggle } from '@angular/material/slide-toggle';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { Planta } from '../../../models/planta.model';
-import {MatSelectModule} from '@angular/material/select';
-import {MatCheckboxModule} from '@angular/material/checkbox';
-import { TipoCategoria } from '../../../models/tipoCategoria.model';
-import { CommonModule } from '@angular/common';
-import { CategoriaPlanta } from '../../../models/categoriaPlanta.model';
-import { CategoriaPlantaService } from '../../../services/categoriaPlanta.service';
-import { MatSlideToggle } from '@angular/material/slide-toggle';
-import { PlantaService } from '../../../services/Planta.service';
-import { StatusPlanta } from '../../../models/StatusPlanta.model';
 import { NivelDificuldade } from '../../../models/NivelDificuldade.model';
 import { NivelToxicidade } from '../../../models/NivelToxicidade.model';
 import { PortePlanta } from '../../../models/PortePlanta.model';
-import { FornecedorService } from '../../../services/fornecedor.service';
+import { StatusPlanta } from '../../../models/StatusPlanta.model';
+import { CategoriaPlanta } from '../../../models/categoriaPlanta.model';
 import { Fornecedor } from '../../../models/fornecedor.model';
-import {MatChipInputEvent, MatChipsModule} from '@angular/material/chips';
-import { MatIconModule } from '@angular/material/icon';
-import {MatAutocompleteSelectedEvent, MatAutocompleteModule} from '@angular/material/autocomplete';
-import { Observable } from 'rxjs';
-import { TagService } from '../../../services/tag.service';
+import { Planta } from '../../../models/planta.model';
 import { Tag } from '../../../models/tag.model';
+import { PlantaService } from '../../../services/Planta.service';
+import { CategoriaPlantaService } from '../../../services/categoriaPlanta.service';
+import { FornecedorService } from '../../../services/fornecedor.service';
+import { TagService } from '../../../services/tag.service';
 
 
 @Component({
@@ -38,11 +36,14 @@ import { Tag } from '../../../models/tag.model';
   standalone: true,
   imports: [NgIf, ReactiveFormsModule, MatFormFieldModule, MatInputModule,
     MatButtonModule, MatCardModule, MatToolbarModule, RouterModule, MatSelectModule,
-    MatCheckboxModule, CommonModule, MatSlideToggle, MatChipsModule, FormsModule, MatIconModule, MatAutocompleteModule, AsyncPipe],
+    MatCheckboxModule, CommonModule, MatSlideToggle, MatChipsModule, FormsModule, MatIconModule, MatAutocompleteModule, AsyncPipe,
+    MatExpansionModule],
   templateUrl: './planta-form.component.html',
   styleUrl: './planta-form.component.css'
 })
 export class PlantaFormComponent {
+
+  planta: Planta | null = null;
 
   formGroup: FormGroup;
   categoriasPlantas: CategoriaPlanta[] = [];
@@ -112,53 +113,59 @@ export class PlantaFormComponent {
       this.tags = data;
     })
     this.initializeForm();
+
+    // abrir em dados da planta se tiver configurado a planta pela primeira vez
+    this.step = this.planta?.codigo ? 0 : 2;
+
+    // fast changes
+    this.selectedStatusPlanta = this.planta?.statusPlanta.id || 0;
   }
 
   initializeForm(): void {
-    const planta : Planta = this.activatedRoute.snapshot.data['planta'];
+    this.planta = this.activatedRoute.snapshot.data['planta'];
 
     // const idCategoriaBiologica = this.categoriasPlantas.find(categoria => categoria.id === planta.categoriaPlanta.id)?.id;
-    const idCategoriaBiologica = planta && planta.categoriaPlanta ? planta.categoriaPlanta.id : null;
-    const idStatusPlanta = planta && planta.statusPlanta ? planta.statusPlanta.id: null;
-    const idNivelDificuldade = planta && planta.nivelDificuldade? planta.nivelDificuldade.id : null;
-    const idNivelToxidade = planta && planta.nivelToxidade ? planta.nivelToxidade.id: null;
-    const idPortePlanta = planta && planta.portePlanta ?  planta.portePlanta.id: null;
-    const idFornecedor = planta  && planta.fornecedor ? planta.fornecedor.id: null;
+    const idCategoriaBiologica = this.planta && this.planta.categoriaPlanta ? this.planta.categoriaPlanta.id : null;
+    const idStatusPlanta = this.planta && this.planta.statusPlanta ? this.planta.statusPlanta.id: null;
+    const idNivelDificuldade = this.planta && this.planta.nivelDificuldade? this.planta.nivelDificuldade.id : null;
+    const idNivelToxidade = this.planta && this.planta.nivelToxidade ? this.planta.nivelToxidade.id: null;
+    const idPortePlanta = this.planta && this.planta.portePlanta ?  this.planta.portePlanta.id: null;
+    const idFornecedor = this.planta  && this.planta.fornecedor ? this.planta.fornecedor.id: null;
 
     this.formGroup = this.formBuilder.group({
-      id: [(planta && planta.id) ? planta.id : null],
-      nomeComum: [(planta && planta.nomeComum) ? planta.nomeComum : '',
+      id: [(this.planta && this.planta.id) ? this.planta.id : null],
+      nomeComum: [(this.planta && this.planta.nomeComum) ? this.planta.nomeComum : '',
       Validators.compose([
         Validators.required,
       ])],
-      nomeCientifico: [(planta && planta.nomeCientifico) ? planta.nomeCientifico : '',
+      nomeCientifico: [(this.planta && this.planta.nomeCientifico) ? this.planta.nomeCientifico : '',
       Validators.compose([
         // Validators.required,
       ])],
-      descricao: [(planta && planta.descricao) ? planta.descricao : '',
+      descricao: [(this.planta && this.planta.descricao) ? this.planta.descricao : '',
       Validators.compose([
         Validators.maxLength(400),
       ])],
-      codigo: [(planta && planta.codigo) ? planta.codigo : '',
+      codigo: [(this.planta && this.planta.codigo) ? this.planta.codigo : '',
       Validators.compose([
         Validators.required,
       ])],
-      precoVenda: [(planta && planta.precoVenda) ? planta.precoVenda : 0,
+      precoVenda: [(this.planta && this.planta.precoVenda) ? this.planta.precoVenda : 0,
       Validators.compose([
         Validators.required,
         Validators.min(0),
       ])],
-      precoCusto: [(planta && planta.precoCusto) ? planta.precoCusto : 0,
+      precoCusto: [(this.planta && this.planta.precoCusto) ? this.planta.precoCusto : 0,
         Validators.compose([
           Validators.required,
           Validators.min(0),
       ])],
-      desconto: [(planta && planta.desconto) ? planta.desconto : 0,
+      desconto: [(this.planta && this.planta.desconto) ? this.planta.desconto : 0,
         Validators.compose([
           Validators.required,
           Validators.min(0),
       ])],
-      quantidadeDisponivel: [(planta && planta.quantidadeDisponivel) ? planta.quantidadeDisponivel : 0,
+      quantidadeDisponivel: [(this.planta && this.planta.quantidadeDisponivel) ? this.planta.quantidadeDisponivel : 0,
         Validators.compose([
           Validators.required,
           Validators.min(0),
@@ -168,11 +175,11 @@ export class PlantaFormComponent {
       //     Validators.required,
       //     Validators.min(0),
       // ])],
-      origem: [(planta && planta.origem) ? planta.origem : '',
+      origem: [(this.planta && this.planta.origem) ? this.planta.origem : '',
         Validators.compose([
           // Validators.required,
       ])],
-      tempoCrescimento: [(planta && planta.tempoCrescimento) ? planta.tempoCrescimento : '',
+      tempoCrescimento: [(this.planta && this.planta.tempoCrescimento) ? this.planta.tempoCrescimento : '',
         Validators.compose([
           // Validators.required,
       ])],
@@ -192,7 +199,7 @@ export class PlantaFormComponent {
         Validators.compose([
           Validators.required,
       ])],
-      idsTags: [(planta && planta.tags) ? planta.tags : []],
+      idsTags: [(this.planta && this.planta.tags) ? this.planta.tags : []],
       // idFornecedor: [idFornecedor,]
       idFornecedor: [idFornecedor,
         Validators.compose([
@@ -387,7 +394,184 @@ export class PlantaFormComponent {
     return 'Erro não mapeado. Verifique o console ou entre em contato com o desenvolvedor.';
   }
 
+  // imagens
+
+  getUrlImagem(imagem: string): string {
+    if (!this.planta) { return ''; }
+
+    return this.plantaService.getUrlImagem(this.planta, imagem);
+  }
+
+  trackByImagens(index: number, image: any): any {
+    console.log(this.planta)
+    return image ? image.id : undefined;
+  }
+
+  private reloadPlanta(): void {
+    if (this.planta) {
+      this.plantaService.findById(this.planta.id.toString())
+        .subscribe({
+          next: (planta) => {
+            this.planta = planta;
+          },
+          error: (err) => {
+            console.log('Erro ao recarregar a planta', err);
+          }
+        });
+    }
+  }
+
+  uploadImagem(event: any) {
+    const file2upload = event.target.files[0];
+
+    if (file2upload) {
+      this.plantaService.uploadImagem(this.planta?.id as number, file2upload)
+      .subscribe({
+        next: () => {
+          // ! make a toast and send loading
+          window.alert('Imagem enviada com sucesso');
+          this.reloadPlanta();
+        },
+        error: err => {
+          // ! make a toast
+          console.log('Erro ao fazer o upload da imagem', err);
+          window.alert('Erro ao fazer o upload da imagem: ' + err.error.errors[0].message);
+          // tratar o erro
+        }
+      })
+    }
+  }
+
+  deleteImagem(nomeImagem: string) {
+    if (!this.planta) { return; }
+
+    this.plantaService.deleteImagem(this.planta.id, nomeImagem)
+    .subscribe({
+      next: () => {
+        // ! make a toast and send loading
+        window.alert('Imagem excluída com sucesso');
+        this.reloadPlanta();
+      },
+      error: err => {
+        // ! make a toast
+        console.log('Erro ao excluir a imagem', err);
+        window.alert('Erro ao excluir a imagem' );
+        // tratar o erro
+      }
+    })
+  }
+
+  setImagemPrincipal(nomeImagem: string) {
+    if (!this.planta) { return; }
+
+    this.plantaService.setImagemPrincipal(this.planta.id, nomeImagem)
+    .subscribe({
+      next: () => {
+        // ! make a toast and send loading
+        window.alert('Imagem principal alterada com sucesso');
+        this.reloadPlanta();
+      },
+      error: err => {
+        // ! make a toast
+        console.log('Erro ao alterar a imagem principal', err);
+        window.alert('Erro ao alterar a imagem principal' );
+        // tratar o erro
+      }
+    })
+  }
+
+  // expanded
+  step = 0;
+
+  setStep(index: number) {
+    this.step = index;
+  }
+
+  nextStep() {
+    this.step++;
+  }
+
+  prevStep() {
+    this.step--;
+  }
+
+  // fast changes
+
+  selectedStatusPlanta = 0;
+
+  trackById(index: number, item: any): number {
+    return item.id;
+  }
+
+  updateStatusPlanta(event: any) {
+    if (!this.planta) { return; }
+
+    const dto = { idStatus: event.value};
+
+    this.plantaService.updateStatusplanta(dto, this.planta.id)
+    .subscribe({
+      next: () => {
+        // ! make a toast and send loading
+        window.alert('Status da planta alterado com sucesso');
+        this.reloadPlanta();
+      },
+      error: err => {
+        // ! make a toast
+        console.log('Erro ao alterar o status da planta', err);
+        window.alert('Erro ao alterar o status da planta' );
+        this.selectedStatusPlanta = this.planta?.statusPlanta.id || 0;
+        // tratar o erro
+      }
+    })
+  }
+
+  @ViewChild('addRemoveQuantidadeInput') addRemoveQuantidadeInput!: ElementRef;
+
+  updateQuantidade(type: 'add' | 'remove') {
+    if (!this.planta) { return; }
+
+    const value = this.addRemoveQuantidadeInput.nativeElement.value;
+
+    if (!value) { return; }
+
+    const quantidade = parseInt(type === 'add' ? value : '-' + value);
+    const dto = { quantidade };
+
+    this.plantaService.updateQuantidade(dto, this.planta.id)
+    .subscribe({
+      next: () => {
+        // ! make a toast and send loading
+        window.alert('Quantidade da planta alterada com sucesso');
+        this.reloadPlanta();
+        // clear input
+        this.addRemoveQuantidadeInput.nativeElement.value = '';
+      },
+      error: err => {
+        // ! make a toast
+        console.log('Erro ao alterar a quantidade da planta', err);
+        window.alert('Erro ao alterar a quantidade da planta' );
+        // tratar o erro
+      }
+    })
+  }
+
+  quantidadeToRemoveIsOk() {
+    if (!this.planta) { return false; }
+    if (!this.addRemoveQuantidadeInput) { return false; }
+
+    const value = this.addRemoveQuantidadeInput.nativeElement.value;
+
+    return value > 0 && value <= this.planta.quantidadeDisponivel;
+  }
+
+  quantidadeToAddIsOk() {
+    if (!this.planta) { return false; }
+    if (!this.addRemoveQuantidadeInput) { return false; }
+
+    const value = this.addRemoveQuantidadeInput.nativeElement.value;
+
+    return value > 0;
+  }
+
+
 }
-
-
-// aaaaa

@@ -72,24 +72,35 @@ nav {
 
 .full-width-input {
   width: 100%;
-  margin-bottom: 20px;
+  margin-bottom: 4px;
 }
 
 .pageContent {
   /* border: 2px solid red; */
   width: 100%;
+  /* border: 2px solid red; */
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 20px;
+  /* display: flex;
+  flex-direction: column;
+  gap: 20px; */
+  align-items: stretch;
+  backdrop-filter: blur(4px) ;
+  position: relative;
 }
 
 .header,
 mat-card {
   /* max-width: 800px; */
   margin: auto;
+  margin-bottom: 20px;
   padding: 20px;
+  /* width: 100%; */
 }
 
 .header {
-  backdrop-filter: blur(4px) ;
-  --background-color: rgba(255, 255, 255, 0.8);
+  /* backdrop-filter: blur(4px) ; */
+  /* --background-color: rgba(255, 255, 255, 0.8); */
   background-color: var(--background-color);
   border-radius: 20px 20px 0 0;
   position: relative;
@@ -98,7 +109,7 @@ mat-card {
 }
 
 .header::after {
-  backdrop-filter: blur(4px) ;
+  /* backdrop-filter: blur(4px) ; */
 
   content: '';
   display: block;
@@ -153,4 +164,15 @@ th {
   background-color: rgba(0, 0, 0, 0.02) !important;
   z-index: 222;
   position: relative;
+}
+
+/* blockquotes */
+
+.warn-blockquote {
+  border-left: 5px solid red;
+  padding: 10px 20px;
+  background-color: #ffebee; /* A light red background color */
+  color: red; /* Text color */
+  margin: 10px 0;
+  font-style: italic;
 }
