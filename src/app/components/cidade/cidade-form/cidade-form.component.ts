@@ -76,7 +76,6 @@ export class CidadeFormComponent {
   }
 
   salvar() {
-    console.log('formGroup', this.formGroup);
     this.formGroup.markAllAsTouched();
     if (!this.formGroup.valid) { return; }
 
