@@ -22,7 +22,8 @@ export class CidadeService {
   insert(cidade: Cidade): Observable<Cidade> {
     const data = {
       nome: cidade.nome,
-      idEstado: cidade.estado.id
+      estado: cidade.estado,
+      frete: cidade.frete
     }
     return this.httpClient.post<Cidade>(this.baseUrl, data)
   }
@@ -30,7 +31,8 @@ export class CidadeService {
   update(cidade: Cidade): Observable<Cidade> {
     const data = {
       nome: cidade.nome,
-      idEstado: cidade.estado.id
+      estado: cidade.estado,
+      frete: cidade.frete
     }
     return this.httpClient.put<Cidade>(`${this.baseUrl}/${cidade.id}`, data)
   }
