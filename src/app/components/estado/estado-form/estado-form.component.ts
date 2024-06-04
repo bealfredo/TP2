@@ -1,21 +1,25 @@
+import { CommonModule, NgIf } from '@angular/common';
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import {MatInputModule} from '@angular/material/input';
-import { EstadoService } from '../../../services/estado.service';
-import { ActivatedRoute, Router, RouterLink, RouterModule } from '@angular/router';
-import { Estado } from '../../../models/estado.model';
-import { NgIf } from '@angular/common';
-import {MatCardModule} from '@angular/material/card';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatSlideToggle } from '@angular/material/slide-toggle';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { HttpErrorResponse } from '@angular/common/http';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { Estado } from '../../../models/estado.model';
+import { EstadoService } from '../../../services/estado.service';
 
 @Component({
   selector: 'app-estado-form',
   standalone: true,
   imports: [NgIf, ReactiveFormsModule, MatFormFieldModule, MatInputModule,
-    MatButtonModule, MatCardModule, MatToolbarModule, RouterModule],
+    MatButtonModule, MatCardModule, MatToolbarModule, RouterModule, MatSelectModule,
+    MatCheckboxModule, CommonModule, MatSlideToggle],
   templateUrl: './estado-form.component.html',
   styleUrl: './estado-form.component.css'
 })
@@ -29,20 +33,33 @@ export class EstadoFormComponent {
     private router: Router,
     private activatedRoute: ActivatedRoute
   ) {
-
-    const estado: Estado = activatedRoute.snapshot.data['estado'];
-
     this.formGroup = formBuilder.group({
+      id: [null],
+      nome: ['', Validators.required],
+      sigla: ['', Validators.required],
+    });
+  }
+
+  ngOnInit(): void {
+    this.estadoService.findAll().subscribe(data => {
+      this.initializeForm();
+    })
+  }
+
+  initializeForm(): void {
+    const estado : Estado = this.activatedRoute.snapshot.data['estado'];
+
+    this.formGroup = this.formBuilder.group({
       id: [(estado && estado.id) ? estado.id : null],
       nome: [(estado && estado.nome) ? estado.nome : '',
       Validators.compose([
         Validators.required,
-        Validators.minLength(4)
       ])],
       sigla: [(estado && estado.sigla) ? estado.sigla : '',
       Validators.compose([
         Validators.required,
-        Validators.pattern(/^[a-zA-Z]{2}$/)
+        Validators.minLength(2),
+        Validators.maxLength(2),
       ])],
     })
   }
@@ -59,7 +76,7 @@ export class EstadoFormComponent {
 
     operacao.subscribe({
       next: () => {
-        this.router.navigateByUrl('/estados');
+        this.router.navigateByUrl('/admin/estados');
       },
       error: (err) => {
         console.log('Erro ao salvar', err);
@@ -74,9 +91,10 @@ export class EstadoFormComponent {
       if (estado.id != null) {
         this.estadoService.delete(estado).subscribe({
           next: () => {
-            this.router.navigateByUrl('/estados');
+            this.router.navigateByUrl('/admin/estados');
           },
           error: (err) => {
+            window.alert('Não foi possível excluir o estado. Verifique se ele não está associado a outra entidade.');
             console.log('Erro ao excluir' + JSON.stringify(err));
           }
         })
@@ -106,15 +124,17 @@ export class EstadoFormComponent {
   errorMessages : {[controlName: string] : {[errorName: string]: string}} = {
     nome: {
       required: 'O nome deve ser informado.',
-      minlength: 'O nome deve ter no mínimo 4 caracteres.',
       apiError: ' ' // mensagem da api
     },
     sigla: {
-      required: 'A sigla deve ser informado.',
-      pattern: 'A sigla deve possuir exatamente 2 letras.',
+      required: 'A sigla deve ser informada.',
+      pattern: 'A sigla deve ter 2 letras.',
+      minlength: 'A sigla deve ter 2 letras.',
+      maxlength: 'A sigla deve ter 2 letras.',
       apiError: ' ' // mensagem da api
     }
   }
+
 
   getErrorMessages(controlName: string, errors: ValidationErrors | null | undefined): string {
     if (!errors) { return ''; }
