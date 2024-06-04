@@ -1,53 +1,64 @@
-<mat-toolbar color="primary">
-  <div class="flex-container">
-    <span class="toolbar-title">Controle de Cidades</span>
-    <button mat-fab color="accent" routerLink="/cidades/new">
-      <mat-icon>add</mat-icon>
+<div class="pageContent">
+
+  <div class="header header-list">
+    <h1>Controle de Cidades</h1>
+
+    <button mat-flat-button color="primary" routerLink="/admin/cidades/new">
+      <mat-icon>add</mat-icon> Adicionar
     </button>
   </div>
-</mat-toolbar>
 
-<table mat-table [dataSource]="cidades" class="mat-elevation-z8">
+  <table mat-table [dataSource]="cidades" class="mat-elevation-z8">
 
-  <!-- Position Column -->
-  <ng-container matColumnDef="id">
-    <th mat-header-cell *matHeaderCellDef> Id </th>
-    <td mat-cell *matCellDef="let element"> {{element.id}} </td>
-  </ng-container>
+    <!-- Position Column -->
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef (click)="setOrderBy('id')"> Id </th>
+      <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+    </ng-container>
 
-  <!-- Nome Column -->
-  <ng-container matColumnDef="nome">
-    <th mat-header-cell *matHeaderCellDef> Nome </th>
-    <td mat-cell *matCellDef="let element"> {{element.nome}} </td>
-  </ng-container>
+    <!-- Nome Column -->
+    <ng-container matColumnDef="nome">
+      <th mat-header-cell *matHeaderCellDef (click)="setOrderBy('nome')"> Nome </th>
+      <td mat-cell *matCellDef="let element"> {{element.nome}} </td>
+    </ng-container>
 
-  <!-- Sigla Column -->
-  <ng-container matColumnDef="estado">
-    <th mat-header-cell *matHeaderCellDef> Estado </th>
-    <td mat-cell *matCellDef="let element"> {{element.estado.nome}} - {{element.estado.sigla}} </td>
-  </ng-container>
+    <!-- Estado Column -->
+    <ng-container matColumnDef="estado">
+      <th mat-header-cell *matHeaderCellDef (click)="setOrderBy('estado')"> Estado </th>
+      <td mat-cell *matCellDef="let element"> {{element.estado.sigla}} </td>
+    </ng-container>
 
-  <!-- Ação Column -->
-  <ng-container matColumnDef="acao">
-    <th mat-header-cell *matHeaderCellDef> Ação </th>
-    <td mat-cell *matCellDef="let element">
-      <button mat-icon-button
-        color="primary"
-        routerLink="/cidades/edit/{{element.id}}"
-      >
-        <mat-icon>edit</mat-icon>
-      </button>
-      <button mat-icon-button
-        color="warn"
-      >
-        <mat-icon>delete</mat-icon>
-      </button>
-    </td>
-  </ng-container>
+    <!-- Frete Column -->
+    <ng-container matColumnDef="frete">
+      <th mat-header-cell *matHeaderCellDef (click)="setOrderBy('frete')"> frete </th>
+      <td mat-cell *matCellDef="let element">
+        <span>{{element.frete.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) }}</span>
+      </td>
+
+    </ng-container>
+
+    <!-- Ação Column -->
+    <ng-container matColumnDef="acao">
+      <th mat-header-cell *matHeaderCellDef> Ação </th>
+      <td mat-cell *matCellDef="let element">
+        <button mat-icon-button
+          color="primary"
+          routerLink="/admin/cidades/edit/{{element.id}}"
+        >
+          <mat-icon>edit</mat-icon>
+        </button>
+        <!-- <button mat-icon-button
+          color="warn"
+        >
+          <mat-icon>delete</mat-icon>
+        </button> -->
+      </td>
+    </ng-container>
 
 
 
-  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-</table>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+</div>
 
