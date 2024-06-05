@@ -30,19 +30,22 @@ import { MatSlideToggle } from '@angular/material/slide-toggle';
 export class FornecedorFormComponent {
 
   formGroup: FormGroup;
-
   constructor(
     private formBuilder: FormBuilder,
     private fornecedorService: FornecedorService,
     private router: Router,
     private activatedRoute: ActivatedRoute
   ) {
-    this.formGroup = formBuilder.group({
+    this.formGroup = this.formBuilder.group({
       id: [null],
       nome: ['', Validators.required],
       email: [''],
-      telefone: ['2'],
-      cnpj: ['']
+      telefone: this.formBuilder.group({
+        ddd: ['', [, Validators.pattern('^[0-9]{2}$')]],
+        numero: ['', [, Validators.pattern('^[0-9]{9}$')]]
+      }),
+      cnpj: [''],
+      hasTelefone: [false]
     });
   }
 
@@ -65,15 +68,52 @@ export class FornecedorFormComponent {
       Validators.compose([
         Validators.email,
       ])],
-      telefone: [(fornecedor && fornecedor.telefone) ? fornecedor.telefone : '',
-      Validators.compose([
-        Validators.pattern('^[0-9]{11}$'),
-      ])],
+      telefone: this.formBuilder.group({
+        ddd: [(fornecedor && fornecedor.telefone) ? fornecedor.telefone.ddd : '',
+        Validators.compose([
+          // Validators.pattern('^[0-9]{2}$'),
+        ])],
+        numero: [(fornecedor && fornecedor.telefone) ? fornecedor.telefone.numero : '',
+        Validators.compose([
+          // Validators.pattern('^[0-9]{9}$'),
+        ])]
+      }),
       cnpj: [(fornecedor && fornecedor.cnpj) ? fornecedor.cnpj : '',
       Validators.compose([
         Validators.pattern('^[0-9]{14}$'),
-      ])]
+      ])],
+      hasTelefone: [(fornecedor && fornecedor.telefone != null) ? true : false]
     })
+
+    this.formGroup.get('hasTelefone')?.valueChanges.subscribe((value) => {
+      this.updateHasTelefone(value);
+    });
+    if (this.formGroup.get('hasTelefone')?.value) {
+      this.updateHasTelefone(true);
+    } else {
+      this.updateHasTelefone(false);
+    }
+  }
+
+  getHasTelefone = () => this.formGroup.get('hasTelefone')?.value;
+
+  updateHasTelefone = (value: boolean) => {
+    const hasTelefone = value;
+    if (hasTelefone) {
+      // enable
+      this.formGroup.get('telefone')?.get('ddd')?.enable();
+      this.formGroup.get('telefone')?.get('numero')?.enable();
+      this.formGroup.get('telefone')?.get('ddd')?.setValidators([Validators.required, Validators.pattern('^[0-9]{2}$')]);
+      this.formGroup.get('telefone')?.get('numero')?.setValidators([Validators.required, Validators.pattern('^[0-9]{9}$')]);
+    } else {
+      // disable
+      this.formGroup.get('telefone')?.get('ddd')?.disable();
+      this.formGroup.get('telefone')?.get('numero')?.disable();
+      this.formGroup.get('telefone')?.get('ddd')?.clearValidators();
+      this.formGroup.get('telefone')?.get('numero')?.clearValidators();
+    }
+    this.formGroup.get('telefone')?.get('ddd')?.updateValueAndValidity();
+    this.formGroup.get('telefone')?.get('numero')?.updateValueAndValidity();
   }
 
   formatarCnpj(cnpj: string): string {
@@ -94,7 +134,15 @@ export class FornecedorFormComponent {
     this.formGroup.markAllAsTouched();
     if (!this.formGroup.valid) { return; }
 
-    const fornecedor = this.formGroup.value;
+    console.log('formGroup', this.formGroup.value);
+
+    const telefone = this.formGroup.value.hasTelefone ? this.formGroup?.get('telefone')?.value : null;
+
+    // const fornecedor = this.formGroup.value;
+    const fornecedor = {
+      ...this.formGroup.value,
+      telefone: telefone
+    }
 
     const operacao = (fornecedor.id == null)
     ? this.fornecedorService.insert(fornecedor)
@@ -102,7 +150,7 @@ export class FornecedorFormComponent {
 
     operacao.subscribe({
       next: () => {
-        this.router.navigateByUrl('/fornecedores');
+        this.router.navigateByUrl('/admin/fornecedores');
       },
       error: (err) => {
         console.log('Erro ao salvar', err);
@@ -112,19 +160,20 @@ export class FornecedorFormComponent {
   }
 
   excluir() {
-    if (this.formGroup.valid) {
-      const fornecedor = this.formGroup.value;
-      if (fornecedor.id != null) {
-        this.fornecedorService.delete(fornecedor).subscribe({
-          next: () => {
-            this.router.navigateByUrl('/fornecedores');
-          },
-          error: (err) => {
-            window.alert('Não foi possível excluir o fornecedor. Verifique se o mesmo não está associado a uma planta.');
-            console.log('Erro ao excluir' + JSON.stringify(err));
-          }
-        })
+    const fornecedor = this.formGroup.value;
+    if (fornecedor.id != null) {
+      if (!window.confirm('Deseja realmente excluir o fornecedor?')) {
+        return;
       }
+      this.fornecedorService.delete(fornecedor).subscribe({
+        next: () => {
+          this.router.navigateByUrl('admin//fornecedores');
+        },
+        error: (err) => {
+          window.alert('Não foi possível excluir o fornecedor. Verifique se o mesmo não está associado a uma planta.');
+          console.log('Erro ao excluir' + JSON.stringify(err));
+        }
+      })
     }
   }
 
@@ -156,8 +205,14 @@ export class FornecedorFormComponent {
       email: 'E-mail inválido.',
       apiError: ' ' // mensagem da api
     },
-    telefone: {
-      pattern: 'Telefone inválido. Deve ter 11 dígitos. (Apenas números.)',
+    'telefone.ddd': {
+      required: 'O DDD deve ser informado.',
+      pattern: 'O DDD deve ter 2 números.',
+      apiError: ' ' // mensagem da api
+    },
+    'telefone.numero': {
+      required: 'O número deve ser informado.',
+      pattern: 'O número deve ter 9 números.',
       apiError: ' ' // mensagem da api
     },
     cnpj: {
@@ -165,7 +220,6 @@ export class FornecedorFormComponent {
       apiError: ' ' // mensagem da api
     }
   }
-
 
   getErrorMessages(controlName: string, errors: ValidationErrors | null | undefined): string {
     if (!errors) { return ''; }
