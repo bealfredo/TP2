@@ -35,21 +35,35 @@
           </mat-error>
         </mat-form-field>
 
-        <mat-form-field appearance="fill" class="full-width-input">
-          <mat-label>Telefone</mat-label>
-          <input matInput type="text" formControlName="telefone">
-          @if (formGroup.get('telefone')?.valid && formGroup.get('telefone')) {
-            <mat-hint>{{ formatarTelefone(formGroup.get('telefone')?.value) }}</mat-hint>
-          }
+        <!-- has telefone -->
+        <mat-slide-toggle
+          formControlName="hasTelefone"
+          class="example-margin"
+          [color]="'primary'"
+          id="hasTelefone"
+        >
+          Adicionar telefone
+        </mat-slide-toggle>
+        <br>
+        <br>
+        <div formGroupName="telefone" id="telefone">
 
-          <mat-error *ngIf="formGroup.get('telefone')?.errors && formGroup.get('telefone')?.touched">
-            {{this.getErrorMessages('telefone', this.formGroup.get('telefone')?.errors)}}
+          <mat-form-field style="width: 30%;">
+            <mat-label>DDD</mat-label>
+            <input matInput formControlName="ddd">
+            <mat-error *ngIf="formGroup.get('telefone')?.get('ddd')?.invalid">
+              {{ getErrorMessages('telefone.ddd', formGroup.get('telefone')?.get('ddd')?.errors) }}
+            </mat-error>
+          </mat-form-field>
 
-            @if (formGroup.get('telefone')?.hasError('apiError')) {
-              <span>{{formGroup.get('telefone')?.getError('apiError')}}</span>
-            }
-          </mat-error>
-        </mat-form-field>
+          <mat-form-field style="width: 70%;">
+            <mat-label>Número</mat-label>
+            <input matInput formControlName="numero">
+            <mat-error *ngIf="formGroup.get('telefone')?.get('numero')?.invalid">
+              {{ getErrorMessages('telefone.numero', formGroup.get('telefone')?.get('numero')?.errors) }}
+            </mat-error>
+          </mat-form-field>
+        </div>
 
         <mat-form-field appearance="fill" class="full-width-input">
           <mat-label>Cnpj</mat-label>
@@ -84,7 +98,7 @@
         Excluir
       </button>
       <button mat-raised-button
-        routerLink="/fornecedores"
+        routerLink="/admin/fornecedores"
       >
         cancelar
       </button>
