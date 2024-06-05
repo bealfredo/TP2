@@ -31,5 +31,4 @@ export class FornecedorService {
   delete(fornecedor: Fornecedor): Observable<any> {
     return this.httpClient.delete<any>(`${this.baseUrl}/${fornecedor.id}`)
   }
-
 }
