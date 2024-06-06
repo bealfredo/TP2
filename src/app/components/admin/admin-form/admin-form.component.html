@@ -1,0 +1,237 @@
+<!-- <mat-toolbar color="primary" class="toolbar-title">Cadastro de Categoria de Planta</mat-toolbar> -->
+
+<div class="pageContent">
+  <div class="header">
+    <h1>Editar Administrador</h1>
+  </div>
+
+  <mat-card class="card">
+    <mat-card-content>
+      <form [formGroup]="formGroup">
+        <!-- email -->
+        <mat-form-field appearance="fill" class="full-width-input">
+          <mat-label>Email</mat-label>
+          <input matInput type="text" formControlName="email">
+          <mat-hint>
+            @if (formGroup.get('email')?.valid) {
+              {{'Email disponível'}}
+            }
+          </mat-hint>
+
+
+          <mat-error *ngIf="formGroup.get('email')?.errors && formGroup.get('email')?.touched">
+            {{this.getErrorMessages('email', this.formGroup.get('email')?.errors)}}
+
+            @if (formGroup.get('email')?.hasError('apiError')) {
+              <span>{{formGroup.get('email')?.getError('apiError')}}</span>
+            }
+          </mat-error>
+        </mat-form-field>
+
+        @if (admin == null) {
+          @if (formGroup.get('email')?.hasError('emailTaken')) {
+            <blockquote class="warn-blockquote">
+              <p>
+                Este email já está sendo utilizado por outro tipo de usuário. Clique no botão abaixo para criar um perfil de administrador para este email.
+              </p>
+
+              <p>
+                * Por padrão o novoe perfil será do tipo Emplooyee (Funcionário)
+              </p>
+
+              <button mat-raised-button
+                color="primary"
+                style="width: fit-content;"
+                (click)="criarPerfilAdmin()"
+              >
+                Criar conta de administrador
+              </button>
+            </blockquote>
+          }
+
+          @if (formGroup.get('email')?.hasError('hasTipoPerfil')) {
+
+            <blockquote class="warn-blockquote">
+              <p>
+                Este email já possui um perfil de administrador. Clique no botão abaixo para editar este perfil.
+              </p>
+
+              <button mat-raised-button
+                color="primary"
+                style="width: fit-content;"
+                routerLink="/admin/admins/edit/{{formGroup.get('email')?.getError('idPerfil')}}"
+              >
+                Editar perfil de administrador
+              </button>
+            </blockquote>
+          }
+        }
+
+
+        <mat-form-field appearance="fill" class="full-width-input">
+          <mat-label>Nome</mat-label>
+          <input matInput type="text" formControlName="nome">
+
+          <mat-error *ngIf="formGroup.get('nome')?.errors && formGroup.get('nome')?.touched">
+            {{this.getErrorMessages('nome', this.formGroup.get('nome')?.errors)}}
+
+            @if (formGroup.get('nome')?.hasError('apiError')) {
+              <span>{{formGroup.get('nome')?.getError('apiError')}}</span>
+            }
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="full-width-input">
+          <mat-label>Sobrenome</mat-label>
+          <input matInput type="text" formControlName="sobrenome">
+          <mat-error *ngIf="formGroup.get('sobrenome')?.errors && formGroup.get('sobrenome')?.touched">
+            {{this.getErrorMessages('sobrenome', this.formGroup.get('sobrenome')?.errors)}}
+
+            @if (formGroup.get('sobrenome')?.hasError('apiError')) {
+              <span>{{formGroup.get('sobrenome')?.getError('apiError')}}</span>
+            }
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="full-width-input">
+          <mat-label>CPF</mat-label>
+          <input matInput type="text" formControlName="cpf">
+          @if (formGroup.get('cpf')?.valid && formGroup.get('cpf')) {
+            <mat-hint>{{ formatarCpf(formGroup.get('cpf')?.value) }}</mat-hint>
+          }
+
+          <mat-error *ngIf="formGroup.get('cpf')?.errors && formGroup.get('cpf')?.touched">
+            {{this.getErrorMessages('cpf', this.formGroup.get('cpf')?.errors)}}
+
+            @if (formGroup.get('cpf')?.hasError('apiError')) {
+              <span>{{formGroup.get('cpf')?.getError('apiError')}}</span>
+            }
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="full-width-input">
+          <mat-label>Data de nascimento</mat-label>
+          <input matInput [matDatepicker]="picker" formControlName="dataNascimento">
+          <mat-hint>MM/DD/AAAA</mat-hint>
+          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+
+          <mat-error *ngIf="formGroup.get('dataNascimento')?.errors && formGroup.get('dataNascimento')?.touched">
+            {{ this.getErrorMessages('dataNascimento', this.formGroup.get('dataNascimento')?.errors) }}
+            <span *ngIf="formGroup.get('dataNascimento')?.hasError('apiError')">{{ formGroup.get('dataNascimento')?.getError('apiError') }}</span>
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="full-width-input">
+          <mat-label>Tipo de administrador</mat-label>
+
+          <mat-select formControlName="idTipoAdmin">
+            @for (tipo of tiposAdmin; track tipo.id) {
+              <mat-option [value]="tipo.id">{{tipo.label}}</mat-option>
+            }
+          </mat-select>
+          <mat-hint>
+            {{ getTipoAdminDiscription(formGroup.get('idTipoAdmin')?.value) }}
+          </mat-hint>
+
+          <mat-error *ngIf="formGroup.get('idTipoAdmin')?.errors && formGroup.get('idTipoAdmin')?.touched">
+            {{this.getErrorMessages('idTipoAdmin', this.formGroup.get('idTipoAdmin')?.errors)}}
+
+
+            @if (formGroup.get('idTipoAdmin')?.hasError('apiError')) {
+              <span>{{formGroup.get('idTipoAdmin')?.getError('apiError')}}</span>
+            }
+          </mat-error>
+        </mat-form-field>
+
+        <br>
+        <br>
+
+        <!-- has telefone -->
+        <mat-slide-toggle
+          formControlName="hasTelefone"
+          class="example-margin"
+          [color]="'primary'"
+          id="hasTelefone"
+        >
+          Adicionar telefone
+        </mat-slide-toggle>
+        <br>
+        <br>
+        <div formGroupName="telefone" id="telefone">
+
+          <mat-form-field style="width: 30%;">
+            <mat-label>DDD</mat-label>
+            <input matInput formControlName="ddd">
+            <mat-error *ngIf="formGroup.get('telefone')?.get('ddd')?.invalid">
+              {{ getErrorMessages('telefone.ddd', formGroup.get('telefone')?.get('ddd')?.errors) }}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field style="width: 70%;">
+            <mat-label>Número</mat-label>
+            <input matInput formControlName="numero">
+            <mat-error *ngIf="formGroup.get('telefone')?.get('numero')?.invalid">
+              {{ getErrorMessages('telefone.numero', formGroup.get('telefone')?.get('numero')?.errors) }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        @if (admin == null) {
+
+          <!-- senha -->
+          <mat-form-field appearance="fill" class="full-width-input">
+            <mat-label>Senha</mat-label>
+            <input matInput type="text" formControlName="senha" minlength="3">
+
+            <mat-error *ngIf="formGroup.get('senha')?.errors && formGroup.get('senha')?.touched">
+              {{this.getErrorMessages('senha', this.formGroup.get('senha')?.errors)}}
+
+              @if (formGroup.get('senha')?.hasError('apiError')) {
+                <span>{{formGroup.get('senha')?.getError('apiError')}}</span>
+              }
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill" class="full-width-input">
+            <mat-label>Confirmar senha</mat-label>
+            <input matInput type="text" formControlName="confirmarSenha">
+
+            <mat-error *ngIf="formGroup.get('confirmarSenha')?.errors && formGroup.get('confirmarSenha')?.touched">
+              {{this.getErrorMessages('confirmarSenha', this.formGroup.get('confirmarSenha')?.errors)}}
+
+              @if (formGroup.get('confirmarSenha')?.hasError('apiError')) {
+                <span>{{formGroup.get('confirmarSenha')?.getError('apiError')}}</span>
+              }
+            </mat-error>
+          </mat-form-field>
+        }
+
+
+
+      </form>
+    </mat-card-content>
+    <mat-card-actions>
+      <button mat-raised-button
+        color="primary"
+        (click)="salvar()"
+      >
+        Salvar
+      </button>
+      <button mat-raised-button
+        *ngIf="formGroup?.get('id')?.value"
+        color="warn"
+        (click)="excluir()"
+      >
+        Excluir
+      </button>
+      <button mat-raised-button
+        routerLink="/admin/admins"
+      >
+        cancelar
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</div>
+
+<!-- <form [formGroup]="formGroup" (ngSubmit)="onSubmit()"></form></form>-->

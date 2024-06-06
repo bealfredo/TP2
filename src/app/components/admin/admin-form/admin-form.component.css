@@ -1,0 +1,10 @@
+#telefone {
+  display: flex;
+  gap: 10px;
+}
+
+h4 {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}

@@ -1,0 +1,87 @@
+<div class="pageContent">
+
+  <div class="header header-list">
+    <h1>Controle de Administradores</h1>
+
+    <button mat-flat-button color="primary" routerLink="/admin/admins/new">
+      <mat-icon>add</mat-icon> Adicionar
+    </button>
+  </div>
+
+  <div class="tableWrapper">
+    <table mat-table [dataSource]="admins" class="mat-elevation-z8">
+
+      <!-- Position Column -->
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef> Id </th>
+        <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+      </ng-container>
+
+      <!-- Nome Column -->
+      <ng-container matColumnDef="nome">
+        <th mat-header-cell *matHeaderCellDef> Nome </th>
+        <td mat-cell *matCellDef="let element"> {{element.nome}} </td>
+      </ng-container>
+
+      <!-- Sobrenome Column -->
+      <ng-container matColumnDef="sobrenome">
+        <th mat-header-cell *matHeaderCellDef> Sobrenome </th>
+        <td mat-cell *matCellDef="let element"> {{element.sobrenome}} </td>
+      </ng-container>
+
+      <!-- Email Column -->
+      <ng-container matColumnDef="email">
+        <th mat-header-cell *matHeaderCellDef> Email </th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.email }}
+        </td>
+      </ng-container>
+
+      <!-- Telefone Column -->
+      <ng-container matColumnDef="telefone">
+        <th mat-header-cell *matHeaderCellDef> Telefone </th>
+        <td mat-cell *matCellDef="let element">
+          {{ formatarTelefone(element.telefone)}}
+        </td>
+      </ng-container>
+
+      <!-- CPF Column -->
+      <ng-container matColumnDef="cpf" class="cpf">
+        <th mat-header-cell *matHeaderCellDef> CPF </th>
+        <td mat-cell *matCellDef="let element"> {{formatarCpf(element.cpf)}} </td>
+      </ng-container>
+
+      <!-- TipoAdmin Column -->
+      <ng-container matColumnDef="tipoAdmin">
+        <th mat-header-cell *matHeaderCellDef> Tipo </th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.tipoAdmin.label }}
+        </td>
+      </ng-container>
+
+      <!-- Ação Column -->
+      <ng-container matColumnDef="acao">
+        <th mat-header-cell *matHeaderCellDef> Ação </th>
+        <td mat-cell *matCellDef="let element">
+          <button mat-icon-button
+            color="primary"
+            routerLink="/admin/admins/edit/{{element.id}}"
+          >
+            <mat-icon>edit</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+
+    <mat-paginator
+      [pageSizeOptions]="[10, 20, 30, 40]"
+      [pageSize]="pageSize"
+      [length]="totalRecords"
+      (page)="paginar($event)">
+    </mat-paginator>
+  </div>
+
+</div>
