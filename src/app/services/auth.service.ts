@@ -8,6 +8,7 @@ import { Cliente } from '../models/cliente.model';
 import { Entregador } from '../models/entregador.model';
 import { UsuarioTiposPerfilByEmailResponse } from '../models/usuarioTiposPerfilByEmailResponse.model';
 import { EmailAvailable } from '../models/emailAvailableResponse.model';
+import { EmailTakenCliente } from '../models/emailTakenClienteResponse.model';
 
 export type UsuarioLogado = Admin | Cliente | Entregador;
 
@@ -119,6 +120,10 @@ export class AuthService {
 
   emailavailable(email: string): Observable<EmailAvailable> {
     return this.http.post<EmailAvailable>(`${this.baseURL}/emailavailable`, {email : email});
+  }
+
+  emailTakenCliente(email: string): Observable<EmailTakenCliente> {
+    return this.http.post<EmailTakenCliente>(`${this.baseURL}/emailtakencliente`, {email : email});
   }
 
   usuarioTiposPerfilByEmail(email: string): Observable<UsuarioTiposPerfilByEmailResponse> {

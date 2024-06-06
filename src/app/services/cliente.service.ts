@@ -1,7 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import { Cliente } from '../models/cliente.model';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +10,10 @@ import { Cliente } from '../models/cliente.model';
 export class ClienteService {
   private baseUrl = 'http://localhost:8080/clientes';
 
-  constructor(private httpClient: HttpClient) {  }
+  constructor(
+    private httpClient: HttpClient,
+    private authService: AuthService
+  ) {  }
 
   findAll(page?: number, pageSize?: number): Observable<Cliente[]> {
     let params = {};
@@ -38,5 +42,26 @@ export class ClienteService {
 
   count(): Observable<number> {
     return this.httpClient.get<number>(`${this.baseUrl}/count`);
+  }
+
+  create(cliente: Cliente): Observable<Cliente> {
+    return this.httpClient.post<Cliente>(`${this.baseUrl}`, cliente);
+  }
+
+  insertExistingUser(email: string, passwordExisting: string): Observable<any> {
+    const params = {
+      email: email,
+      passwordExisting: passwordExisting
+    }
+
+    return this.httpClient.post<any>(`${this.baseUrl}/insertexistinguser`, params, {observe: 'response'}).pipe(
+      tap((res: any) => {
+        const authToken = res.headers.get('Authorization') ?? '';
+        if (authToken) {
+          this.authService.setToken(authToken);
+          this.authService.initUsuarioLogado();
+        }
+      })
+    );
   }
 }

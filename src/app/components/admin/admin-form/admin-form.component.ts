@@ -294,8 +294,6 @@ export class AdminFormComponent {
     this.formGroup.markAllAsTouched();
     if (!this.formGroup.valid) { return; }
 
-    console.log('formGroup', this.formGroup.value);
-
     const telefone = this.formGroup.value.hasTelefone ? this.formGroup?.get('telefone')?.value : null;
 
     // const admin = this.formGroup.value;
