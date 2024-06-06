@@ -6,6 +6,8 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 import { Admin } from '../models/admin.model';
 import { Cliente } from '../models/cliente.model';
 import { Entregador } from '../models/entregador.model';
+import { UsuarioTiposPerfilByEmailResponse } from '../models/usuarioTiposPerfilByEmailResponse.model';
+import { EmailAvailable } from '../models/emailAvailableResponse.model';
 
 export type UsuarioLogado = Admin | Cliente | Entregador;
 
@@ -113,6 +115,14 @@ export class AuthService {
       console.error('Token inválido:', error);
       return true;
     }
+  }
+
+  emailavailable(email: string): Observable<EmailAvailable> {
+    return this.http.post<EmailAvailable>(`${this.baseURL}/emailavailable`, {email : email});
+  }
+
+  usuarioTiposPerfilByEmail(email: string): Observable<UsuarioTiposPerfilByEmailResponse> {
+    return this.http.post<UsuarioTiposPerfilByEmailResponse>(`${this.baseURL}/usuariotiposperfilbyemail`, {email : email});
   }
 
 }

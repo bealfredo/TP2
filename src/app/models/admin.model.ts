@@ -1,4 +1,4 @@
-import { TipoAdmin } from "./TipoAdmin.model";
+import { TipoAdmin } from "./tipoAdmin.model";
 import { Telefone } from "./telefone.model";
 
 export class Admin {
@@ -11,4 +11,5 @@ export class Admin {
   dataNascimento!: string;
   telefone!: Telefone;
   tipoAdmin!: TipoAdmin;
+  senha!: string;
 }

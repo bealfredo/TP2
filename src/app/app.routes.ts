@@ -31,6 +31,9 @@ import { ClienteListComponent } from './components/cliente/cliente-list/cliente-
 import { Cliente } from './models/cliente.model';
 import { ClienteFormComponent } from './components/cliente/cliente-form/cliente-form.component';
 import { clienteResolver } from './components/cliente/resolver/cliente-resolver';
+import { AdminListComponent } from './components/admin/admin-list/admin-list.component';
+import { adminResolver } from './components/admin/resolver/admin-resolver';
+import { AdminFormComponent } from './components/admin/admin-form/admin-form.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent, title: 'Login'},
@@ -82,6 +85,11 @@ export const routes: Routes = [
 
       { path: 'clientes', component: ClienteListComponent, title: 'Lista de Clientes'},
       { path: 'clientes/edit/:id', component: ClienteFormComponent, resolve:{cliente: clienteResolver}, title: 'Editar Cliente'},
+
+      { path: 'admins', component: AdminListComponent, title: 'Lista de Administradores'},
+      { path: 'admins/new', component: AdminFormComponent, title: 'Novo Administrador'},
+      { path: 'admins/edit/:id', component: AdminFormComponent, resolve:{admin: adminResolver}, title: 'Editar Administrador'},
+
     ]
   }
 ];
