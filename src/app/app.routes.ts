@@ -27,6 +27,10 @@ import { AdminTemplateComponent } from './components/template/admin-template/adm
 import { authGuard } from './guard/auth.guard';
 import { DesconectedComponent } from './components/errorPages/desconected/desconected.component';
 import { UnauthorizedComponent } from './components/errorPages/unauthorized/unauthorized.component';
+import { ClienteListComponent } from './components/cliente/cliente-list/cliente-list.component';
+import { Cliente } from './models/cliente.model';
+import { ClienteFormComponent } from './components/cliente/cliente-form/cliente-form.component';
+import { clienteResolver } from './components/cliente/resolver/cliente-resolver';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent, title: 'Login'},
@@ -75,6 +79,9 @@ export const routes: Routes = [
       { path: 'plantas', component: PlantaListComponent, title: 'Lista de Plantas'},
       { path: 'plantas/new', component: PlantaRascunhoFormComponent, title: 'Nova Planta'},
       { path: 'plantas/edit/:id', component: PlantaFormComponent, resolve:{planta: plantaResolver}, title: 'Editar Planta'},
+
+      { path: 'clientes', component: ClienteListComponent, title: 'Lista de Clientes'},
+      { path: 'clientes/edit/:id', component: ClienteFormComponent, resolve:{cliente: clienteResolver}, title: 'Editar Cliente'},
     ]
   }
 ];

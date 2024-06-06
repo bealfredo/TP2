@@ -153,11 +153,19 @@ button[mat-raised-button] {
   width: 120px;
 }
 
-table {
-  box-shadow: 0 -10px 20px rgba(0, 0, 0, 0.1) !important;
+.tableWrapper {
   border-radius: 20px;
-  overflow: hidden;
+  box-shadow: 0 -10px 20px rgba(0, 0, 0, 0.1) !important;
   z-index: 1;
+  overflow: hidden;
+}
+
+table {
+  overflow: hidden;
+}
+
+mat-paginator {
+  background-color: rgba(255, 255, 255, 0.5) !important;
 }
 
 th {
