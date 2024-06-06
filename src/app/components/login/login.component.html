@@ -43,7 +43,7 @@
                 </mat-error>
               </mat-form-field>
 
-              <mat-error *ngIf="errorMessage">
+              <mat-error *ngIf="errorMessage" class="erroMessage">
                 {{errorMessage}}
               </mat-error>
 
@@ -52,6 +52,13 @@
               </a>
 
               <button mat-raised-button class="login-button" color="primary" type="submit">Login</button>
+
+              @if (idTipoPerfil == 3) {
+                <a routerLink="/register">
+                  <span>Não tem uma conta? Cadastre-se</span>
+                </a>
+              }
+
           </form>
       </div>
     }

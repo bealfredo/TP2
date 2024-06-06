@@ -34,9 +34,13 @@ import { clienteResolver } from './components/cliente/resolver/cliente-resolver'
 import { AdminListComponent } from './components/admin/admin-list/admin-list.component';
 import { adminResolver } from './components/admin/resolver/admin-resolver';
 import { AdminFormComponent } from './components/admin/admin-form/admin-form.component';
+import { RegisterComponent } from './components/register/register.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent, title: 'Login'},
+
+  { path: 'register', component: RegisterComponent, title: 'Cadastro de Cliente'},
+
 
   { path: 'desconected', component: DesconectedComponent, title: 'Desconectado'},
 

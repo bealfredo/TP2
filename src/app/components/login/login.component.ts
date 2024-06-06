@@ -132,6 +132,9 @@ export class LoginComponent implements OnInit {
   }
 
   goToPerfil(idTipoPerfil: number) {
+    // clear form
+    this.formGroup.reset();
+    this.errorMessage = '';
     this.router.navigate(['/login'], { queryParams: { perfil: idTipoPerfil } });
   }
 

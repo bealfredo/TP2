@@ -1,0 +1,135 @@
+<div class="login-container">
+
+  <div class="login-box">
+      <h2 class="login-title">Cadastro de Cliente</h2>
+      <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+          <!-- email -->
+        <mat-form-field appearance="fill" class="full-width-input">
+          <mat-label>Email</mat-label>
+          <input matInput type="text" formControlName="email">
+          <mat-hint>
+            @if (formGroup.get('email')?.valid) {
+              {{'Email disponível'}}
+            }
+          </mat-hint>
+
+
+          <mat-error *ngIf="formGroup.get('email')?.errors && formGroup.get('email')?.touched">
+            {{this.getErrorMessages('email', this.formGroup.get('email')?.errors)}}
+
+            @if (formGroup.get('email')?.hasError('apiError')) {
+              <span>{{formGroup.get('email')?.getError('apiError')}}</span>
+            }
+          </mat-error>
+        </mat-form-field>
+
+        <!-- @if (admin == null) { -->
+          @if (formGroup.get('email')?.hasError('emailTaken')) {
+            <blockquote class="warn-blockquote">
+              <p>
+                Este email já está sendo utilizado por outro tipo de usuário. Informe sua senha para criar um perfil de cliente para este email.
+              </p>
+
+              <mat-form-field appearance="fill" class="full-width-input">
+              <mat-label>Senha</mat-label>
+              <input matInput type="password" formControlName="passwordExisting">
+
+              <mat-error *ngIf="formGroup.get('passwordExisting')?.errors && formGroup.get('passwordExisting')?.touched">
+                {{this.getErrorMessages('passwordExisting', this.formGroup.get('passwordExisting')?.errors)}}
+
+                @if (formGroup.get('passwordExisting')?.hasError('apiError')) {
+                  <span>{{formGroup.get('passwordExisting')?.getError('apiError')}}</span>
+                }
+              </mat-error>
+            </mat-form-field>
+
+              <mat-error *ngIf="errorMessage" class="erroMessage">
+                {{errorMessage}}
+              </mat-error>
+
+              <button mat-raised-button
+                color="primary"
+                style="width: fit-content;"
+                [disabled]="!formGroup.get('passwordExisting')?.value || !formGroup.get('passwordExisting')?.valid"
+                (click)="createExistingUser()"
+                type="button"
+              >
+                Criar conta de cliente
+              </button>
+            </blockquote>
+          }
+
+          @if (formGroup.get('email')?.hasError('takenByCliente')) {
+
+            <blockquote class="warn-blockquote">
+              <p>
+                Este email já possui um perfil de cliente. Clique
+                <a [routerLink]="['/login']" [queryParams]="{ perfil: 3 }">
+                  aqui
+                </a>
+                para fazer login.
+              </p>
+
+            </blockquote>
+          }
+        <!-- } -->
+
+        @if (formGroup.get('email')?.valid) {
+
+          <mat-form-field appearance="fill" class="full-width-input">
+          <mat-label>Primeiro nome</mat-label>
+          <input matInput type="text" formControlName="primeiroNome">
+
+          <mat-error *ngIf="formGroup.get('primeiroNome')?.errors && formGroup.get('primeiroNome')?.touched">
+            {{this.getErrorMessages('primeiroNome', this.formGroup.get('primeiroNome')?.errors)}}
+
+            @if (formGroup.get('primeiroNome')?.hasError('apiError')) {
+              <span>{{formGroup.get('primeiroNome')?.getError('apiError')}}</span>
+            }
+          </mat-error>
+        </mat-form-field>
+
+          <!-- senha -->
+          <mat-form-field appearance="fill" class="full-width-input">
+            <mat-label>Senha</mat-label>
+            <input matInput type="text" formControlName="senha" minlength="3">
+
+            <mat-error *ngIf="formGroup.get('senha')?.errors && formGroup.get('senha')?.touched">
+              {{this.getErrorMessages('senha', this.formGroup.get('senha')?.errors)}}
+
+              @if (formGroup.get('senha')?.hasError('apiError')) {
+                <span>{{formGroup.get('senha')?.getError('apiError')}}</span>
+              }
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill" class="full-width-input">
+            <mat-label>Confirmar senha</mat-label>
+            <input matInput type="text" formControlName="confirmarSenha">
+
+            <mat-error *ngIf="formGroup.get('confirmarSenha')?.errors && formGroup.get('confirmarSenha')?.touched">
+              {{this.getErrorMessages('confirmarSenha', this.formGroup.get('confirmarSenha')?.errors)}}
+
+              @if (formGroup.get('confirmarSenha')?.hasError('apiError')) {
+                <span>{{formGroup.get('confirmarSenha')?.getError('apiError')}}</span>
+              }
+            </mat-error>
+          </mat-form-field>
+        }
+
+        <button
+          mat-raised-button
+          class="login-button"
+          color="primary"
+          type="submit"
+          [disabled]="!formGroup.valid"
+        >
+          Cadastrar
+        </button>
+
+        <a [routerLink]="['/login']" [queryParams]="{ perfil: 3 }">
+          <span>Ou faça login</span>
+        </a>
+
+      </form>
+</div>

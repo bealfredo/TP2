@@ -50,6 +50,6 @@ export class AdminService {
   }
 
   insertExistingUser(email: string): Observable<Admin> {
-    return this.httpClient.post<Admin>(`${this.baseUrl}/insertExistingUser`, {email : email});
+    return this.httpClient.post<Admin>(`${this.baseUrl}/insertexistinguser`, {email : email});
   }
 }
