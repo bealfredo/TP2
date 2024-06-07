@@ -1,11 +1,18 @@
 
 .plantas {
   /* border: 2px solid red; */
-  display: flex;
-  flex-wrap: wrap;
+  /* display: flex;
+  flex-wrap: wrap; */
   /* justify-content: center; */
   gap: 40px;
   padding: 20px;
+  justify-content: space-around;
+
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Adjust the minmax values as needed */
+  gap: 40px 40px; /* Adjust the gap as needed */
+
+
 }
 
 .planta {
