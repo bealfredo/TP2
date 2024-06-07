@@ -97,6 +97,27 @@
       </mat-expansion-panel-header>
 
       <div class="enderecos">
+
+        @if(usuarioLogado?.listaEndereco?.length === 0) {
+          <blockquote class="warn-blockquote">
+            <p>
+              Você ainda não possui endereços cadastrados.
+            </p>
+
+            <p>
+              Adicione um endereço editando seu perfil para poder realizar compras.
+            </p>
+
+            <button mat-raised-button
+              color="primary"
+              style="width: fit-content;"
+              routerLink="/profile/edit"
+            >
+              Editar perfil
+            </button>
+          </blockquote>
+        }
+
         @for(endereco of usuarioLogado?.listaEndereco; track endereco.id) {
           <div
             [className]="'endereco-item ' + (isSelectedEndereco(endereco.id) ? ' selectedEndereco' : '')"

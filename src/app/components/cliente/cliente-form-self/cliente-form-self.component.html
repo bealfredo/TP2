@@ -1,0 +1,219 @@
+<!-- <mat-toolbar color="primary" class="toolbar-title">Cadastro de Categoria de Planta</mat-toolbar> -->
+
+<div class="pageContent">
+  <div class="header">
+    <h1>Editar Cliente</h1>
+  </div>
+
+  <mat-card class="card">
+    <mat-card-content>
+      <form [formGroup]="formGroup">
+
+        <mat-form-field appearance="fill" class="full-width-input">
+          <mat-label>Nome</mat-label>
+          <input matInput type="text" formControlName="nome">
+
+          <mat-error *ngIf="formGroup.get('nome')?.errors && formGroup.get('nome')?.touched">
+            {{this.getErrorMessages('nome', this.formGroup.get('nome')?.errors)}}
+
+            @if (formGroup.get('nome')?.hasError('apiError')) {
+              <span>{{formGroup.get('nome')?.getError('apiError')}}</span>
+            }
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="full-width-input">
+          <mat-label>Sobrenome</mat-label>
+          <input matInput type="text" formControlName="sobrenome">
+          <mat-error *ngIf="formGroup.get('sobrenome')?.errors && formGroup.get('sobrenome')?.touched">
+            {{this.getErrorMessages('sobrenome', this.formGroup.get('sobrenome')?.errors)}}
+
+            @if (formGroup.get('sobrenome')?.hasError('apiError')) {
+              <span>{{formGroup.get('sobrenome')?.getError('apiError')}}</span>
+            }
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="full-width-input">
+          <mat-label>CPF</mat-label>
+          <input matInput type="text" formControlName="cpf">
+          @if (formGroup.get('cpf')?.valid && formGroup.get('cpf')) {
+            <mat-hint>{{ formatarCpf(formGroup.get('cpf')?.value) }}</mat-hint>
+          }
+
+          <mat-error *ngIf="formGroup.get('cpf')?.errors && formGroup.get('cpf')?.touched">
+            {{this.getErrorMessages('cpf', this.formGroup.get('cpf')?.errors)}}
+
+            @if (formGroup.get('cpf')?.hasError('apiError')) {
+              <span>{{formGroup.get('cpf')?.getError('apiError')}}</span>
+            }
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="full-width-input">
+          <mat-label>Data de nascimento</mat-label>
+          <input matInput [matDatepicker]="picker" formControlName="dataNascimento">
+          <mat-hint>MM/DD/AAAA</mat-hint>
+          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+
+          <mat-error *ngIf="formGroup.get('dataNascimento')?.errors && formGroup.get('dataNascimento')?.touched">
+            {{ this.getErrorMessages('dataNascimento', this.formGroup.get('dataNascimento')?.errors) }}
+            <span *ngIf="formGroup.get('dataNascimento')?.hasError('apiError')">{{ formGroup.get('dataNascimento')?.getError('apiError') }}</span>
+          </mat-error>
+        </mat-form-field>
+
+        <br>
+        <br>
+
+        <!-- has telefone -->
+        <mat-slide-toggle
+          formControlName="hasTelefone"
+          class="example-margin"
+          [color]="'primary'"
+          id="hasTelefone"
+        >
+          Adicionar telefone
+        </mat-slide-toggle>
+        <br>
+        <br>
+        <div formGroupName="telefone" id="telefone">
+
+          <mat-form-field style="width: 30%;">
+            <mat-label>DDD</mat-label>
+            <input matInput formControlName="ddd">
+            <mat-error *ngIf="formGroup.get('telefone')?.get('ddd')?.invalid">
+              {{ getErrorMessages('telefone.ddd', formGroup.get('telefone')?.get('ddd')?.errors) }}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field style="width: 70%;">
+            <mat-label>Número</mat-label>
+            <input matInput formControlName="numero">
+            <mat-error *ngIf="formGroup.get('telefone')?.get('numero')?.invalid">
+              {{ getErrorMessages('telefone.numero', formGroup.get('telefone')?.get('numero')?.errors) }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <h4>
+          Lista de Endereços
+          <button mat-raised-button
+            color="primary"
+            (click)="adicionarEndereco()"
+            style="width: fit-content;"
+          >
+            Adicionar Endereço
+          </button>
+        </h4>
+        <div formArrayName="listaEndereco">
+
+          <div *ngFor="let endereco of listaEnderecos.controls; let i = index" [formGroupName]="i" class="enderecoWrapper">
+
+            <h4>
+              Endereço {{ i + 1 }}
+              <button mat-raised-button
+                color="warn"
+                (click)="removerEndereco(i)"
+              >
+                Remover
+              </button>
+            </h4>
+            <mat-form-field appearance="fill" class="full-width-input">
+              <mat-label>Nome</mat-label>
+              <input matInput type="text" formControlName="nome">
+
+              <mat-error *ngIf="endereco.get('nome')?.errors && endereco.get('nome')?.touched">
+                {{ getErrorMessages('listaEndereco.nome', endereco.get('nome')?.errors) }}
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill" style="width: 50%;">
+              <mat-label>CEP</mat-label>
+              <input matInput type="text" formControlName="cep">
+
+              <mat-error *ngIf="endereco.get('cep')?.errors && endereco.get('cep')?.touched">
+                {{ getErrorMessages('listaEndereco.cep', endereco.get('cep')?.errors) }}
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill" style="width: 50%;">
+              <mat-label>Cidade</mat-label>
+
+              <mat-select formControlName="cidade">
+                @for (cidade of cidades; track cidade.id) {
+                  <mat-option [value]="cidade.id">{{cidade.nome}} ({{cidade.estado.sigla}})</mat-option>
+                }
+              </mat-select>
+
+              <mat-error *ngIf="endereco.get('cidade')?.errors && endereco.get('cidade')?.touched">
+                {{ getErrorMessages('listaEndereco.cidade', endereco.get('cidade')?.errors) }}
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill" style="width: 50%;">
+              <mat-label>Rua</mat-label>
+              <input matInput type="text" formControlName="rua">
+
+              <mat-error *ngIf="endereco.get('rua')?.errors && endereco.get('rua')?.touched">
+                {{ getErrorMessages('listaEndereco.rua', endereco.get('rua')?.errors) }}
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill" style="width: 50%;">
+              <mat-label>Número do Lote</mat-label>
+              <input matInput type="text" formControlName="numeroLote">
+
+              <mat-error *ngIf="endereco.get('numeroLote')?.errors && endereco.get('numeroLote')?.touched">
+                {{ getErrorMessages('listaEndereco.numeroLote', endereco.get('numeroLote')?.errors) }}
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill" class="full-width-input">
+              <mat-label>Bairro</mat-label>
+              <input matInput type="text" formControlName="bairro">
+
+              <mat-error *ngIf="endereco.get('bairro')?.errors && endereco.get('bairro')?.touched">
+                {{ getErrorMessages('listaEndereco.bairro', endereco.get('bairro')?.errors) }}
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill" class="full-width-input">
+              <mat-label>Complemento</mat-label>
+              <input matInput type="text" formControlName="complemento">
+
+              <mat-error *ngIf="endereco.get('complemento')?.errors && endereco.get('complemento')?.touched">
+                {{ getErrorMessages('listaEndereco.complemento', endereco.get('complemento')?.errors) }}
+              </mat-error>
+            </mat-form-field>
+
+          </div>
+        </div>
+
+
+      </form>
+    </mat-card-content>
+    <mat-card-actions>
+      <button mat-raised-button
+        color="primary"
+        (click)="salvar()"
+      >
+        Salvar
+      </button>
+      <button mat-raised-button
+        *ngIf="formGroup?.get('id')?.value"
+        color="warn"
+        (click)="excluir()"
+      >
+        Excluir
+      </button>
+      <button mat-raised-button
+        routerLink="/admin/clientes"
+      >
+        cancelar
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</div>
+
+<!-- <form [formGroup]="formGroup" (ngSubmit)="onSubmit()"></form></form>-->

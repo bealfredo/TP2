@@ -86,6 +86,10 @@ export class ClienteService {
     return this.httpClient.get<any>(`${this.baseUrl}/carrinho`);
   }
 
+  findByToken(): Observable<Cliente> {
+    return this.httpClient.get<Cliente>(`${this.baseUrl}/findbytoken`);
+  }
+
   // finalizarCompra(idEnderecoEntrega:number, itensVenda: ItemCarrinho[]): Observable<any> {
 
   //   const params = {
