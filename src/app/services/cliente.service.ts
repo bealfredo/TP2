@@ -13,7 +13,7 @@ export class ClienteService {
 
   constructor(
     private httpClient: HttpClient,
-    private authService: AuthService
+    private authService: AuthService,
   ) {  }
 
   findAll(page?: number, pageSize?: number): Observable<Cliente[]> {
@@ -85,4 +85,14 @@ export class ClienteService {
   getCarrinho(): Observable<ItemCarrinho[]> {
     return this.httpClient.get<any>(`${this.baseUrl}/carrinho`);
   }
+
+  // finalizarCompra(idEnderecoEntrega:number, itensVenda: ItemCarrinho[]): Observable<any> {
+
+  //   const params = {
+  //     idEnderecoEntrega: idEnderecoEntrega,
+  //     itensVenda: itensVenda
+  //   }
+
+  //   return this.httpClient.patch<any>(`${this.baseUrl}/vendas`, params);
+  // }
 }

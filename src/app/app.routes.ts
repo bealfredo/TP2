@@ -36,6 +36,7 @@ import { adminResolver } from './components/admin/resolver/admin-resolver';
 import { AdminFormComponent } from './components/admin/admin-form/admin-form.component';
 import { RegisterComponent } from './components/register/register.component';
 import { HomeClienteComponent } from './components/home/home-cliente/home-cliente.component';
+import { CarrinhoComponent } from './components/carrinho/carrinho.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent, title: 'Login'},
@@ -54,7 +55,8 @@ export const routes: Routes = [
     children: [
       // {path: '', pathMatch: 'full', redirectTo: ''},
       {path: '', component: HomeClienteComponent, title: 'Código Floral'},
-      {path: 'plantas', component: PlantaListComponent, title: 'Lista de Plantas'},
+      // {path: 'plantas', component: PlantaListComponent, title: 'Lista de Plantas'},
+      {path: 'carrinho', component: CarrinhoComponent, title: 'Meu Carrinho'},
     ]
   },
   {

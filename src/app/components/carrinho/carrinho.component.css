@@ -1,0 +1,69 @@
+
+.plantas {
+  /* border: 2px solid red; */
+  /* display: flex;
+  flex-wrap: wrap; */
+  /* justify-content: center; */
+  gap: 40px;
+  padding: 20px;
+  justify-content: space-around;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.planta {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+}
+
+.planta-imagem {
+  width: 150px;
+  height: 150px;
+}
+
+.enderecos {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.endero-header {
+  display: flex;
+  font-size: 16px;
+  font-weight: bold;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.endereco-item {
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  padding: 10px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.endereco-item:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.selectedEndereco {
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.valorTotal {
+  display: flex;
+  justify-content: space-between;
+  font-size: 16px;
+  font-weight: bold;
+  margin-top: 20px;
+}
+
+.finalizar {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  width: 100%;
+}

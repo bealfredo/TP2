@@ -7,6 +7,7 @@ import { StatusPlanta } from '../models/StatusPlanta.model';
 import { NivelDificuldade } from '../models/NivelDificuldade.model';
 import { NivelToxicidade } from '../models/NivelToxicidade.model';
 import { PortePlanta } from '../models/PortePlanta.model';
+import { ItemCarrinho } from '../models/itemcarrinho.model';
 
 @Injectable({
   providedIn: 'root'
@@ -85,6 +86,14 @@ export class PlantaService {
 
   getAtivo(): Observable<Planta[]> {
     return this.httpClient.get<Planta[]>(`${this.baseUrl}/ativo`);
+  }
+
+  getPlantasDoCarrinho(carrinho: ItemCarrinho[]): Observable<Planta[]> {
+    const params = {
+      carrinho: carrinho
+    }
+
+    return this.httpClient.post<Planta[]>(`${this.baseUrl}/plantasdocarrinho`, params);
   }
 
 }
