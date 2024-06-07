@@ -53,9 +53,9 @@ export class LoginComponent implements OnInit {
       const password = this.formGroup.get('password')!.value;
       this.authService.login(email, password, this.idTipoPerfil).subscribe({
         next: (resp) => {
-          this.router.navigateByUrl('/');
-          // window.location.href = '/';
-          this.carrinhoService.upToDate();
+          // this.router.navigateByUrl('/');
+          window.location.href = '/';
+          // this.carrinhoService.upToDate();
         },
         error: (err) => {
           this.tratarErrors(err);

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { RouterModule, RouterOutlet } from '@angular/router';
-import { AuthService } from './services/auth.service';
+import { AuthService, UsuarioLogado } from './services/auth.service';
 import { CarrinhoService } from './services/carrinho.service';
 import { LocalStorageService } from './services/local-storage.service';
 
@@ -24,8 +24,11 @@ export class AppComponent implements OnInit {
     this.authService.initUsuarioLogado();
 
     if (this.localStorageService.getItem('jwt_token')) {
+      const usuario : UsuarioLogado = this.localStorageService.getItem('usuario_logado');
+      if (usuario && usuario.idTipoPerfil == 3) {
+        this.carrinhoService.onInit();
+      }
       // this.carrinhoService.upToDate();
-      this.carrinhoService.onInit();
     }
   }
 

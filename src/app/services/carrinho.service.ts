@@ -3,7 +3,7 @@ import { BehaviorSubject } from 'rxjs';
 // import { ItemCarrinho } from '../models/itemcarrinho.model';
 import { LocalStorageService } from './local-storage.service';
 import { ItemCarrinho } from '../models/itemcarrinho.model';
-import { AuthService } from './auth.service';
+import { AuthService, UsuarioLogado } from './auth.service';
 import { ClienteService } from './cliente.service';
 
 @Injectable({
@@ -31,7 +31,7 @@ export class CarrinhoService {
 
   upToDate(): void {
     this.clienteService.getCarrinho().subscribe(data => {
-      this.carrinhoSubject.next(data);
+      this.carrinhoSubject.next(data || []);
       console.log('Carrinho atualizado', data);
     });
   }
@@ -41,6 +41,14 @@ export class CarrinhoService {
     if (this.localStorageService.getItem('jwt_token') === null) {
       alert('Você precisa estar logado para adicionar produtos ao carrinho!');
       return;
+    }
+
+    if (this.localStorageService.getItem('jwt_token')) {
+      const usuario : UsuarioLogado = this.localStorageService.getItem('usuario_logado');
+      if (usuario && usuario.idTipoPerfil != 3) {
+        alert('Você precisa estar logado como cliente para adicionar produtos ao carrinho!');
+        return
+      }
     }
 
     const carrinhoAtual = this.carrinhoSubject.value;
