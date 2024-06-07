@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-export type keyLocalStorage = 'jwt_token' | 'usuario_logado';
+export type keyLocalStorage = 'jwt_token' | 'usuario_logado' | 'carrinho';
 
 @Injectable({
   providedIn: 'root'

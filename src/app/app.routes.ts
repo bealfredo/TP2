@@ -36,6 +36,11 @@ import { adminResolver } from './components/admin/resolver/admin-resolver';
 import { AdminFormComponent } from './components/admin/admin-form/admin-form.component';
 import { RegisterComponent } from './components/register/register.component';
 import { HomeClienteComponent } from './components/home/home-cliente/home-cliente.component';
+import { CarrinhoComponent } from './components/carrinho/carrinho.component';
+import { clienteSelfResolver } from './components/cliente/resolver/cliente-self-resolver';
+import { ClienteFormSelfComponent } from './components/cliente/cliente-form-self/cliente-form-self.component';
+import { MinhasComprasComponent } from './components/minhasCompras/minhas-compras.component';
+import { minhasComprasResolver } from './components/minhasCompras/resolver/minhas-compras-resolver';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent, title: 'Login'},
@@ -54,7 +59,10 @@ export const routes: Routes = [
     children: [
       // {path: '', pathMatch: 'full', redirectTo: ''},
       {path: '', component: HomeClienteComponent, title: 'Código Floral'},
-      {path: 'plantas', component: PlantaListComponent, title: 'Lista de Plantas'},
+      // {path: 'plantas', component: PlantaListComponent, title: 'Lista de Plantas'},
+      {path: 'carrinho', component: CarrinhoComponent, title: 'Meu Carrinho'},
+      { path: 'profile/edit', component: ClienteFormSelfComponent, resolve:{cliente: clienteSelfResolver}, title: 'Editar Meus Dados'},
+      { path: 'minhascompras', component: MinhasComprasComponent, resolve:{minhascompras: minhasComprasResolver}, title: 'Minhas Compras'},
     ]
   },
   {

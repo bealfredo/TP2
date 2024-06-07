@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable, tap } from 'rxjs';
 import { Cliente } from '../models/cliente.model';
 import { AuthService } from './auth.service';
+import { ItemCarrinho } from '../models/itemcarrinho.model';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,7 @@ export class ClienteService {
 
   constructor(
     private httpClient: HttpClient,
-    private authService: AuthService
+    private authService: AuthService,
   ) {  }
 
   findAll(page?: number, pageSize?: number): Observable<Cliente[]> {
@@ -45,7 +46,15 @@ export class ClienteService {
   }
 
   create(cliente: Cliente): Observable<Cliente> {
-    return this.httpClient.post<Cliente>(`${this.baseUrl}`, cliente);
+    return this.httpClient.post<Cliente>(`${this.baseUrl}`, cliente, {observe: 'response'}).pipe(
+      tap((res: any) => {
+        const authToken = res.headers.get('Authorization') ?? '';
+        if (authToken) {
+          this.authService.setToken(authToken);
+          this.authService.initUsuarioLogado();
+        }
+      }
+    ));
   }
 
   insertExistingUser(email: string, passwordExisting: string): Observable<any> {
@@ -64,4 +73,30 @@ export class ClienteService {
       })
     );
   }
+
+  updateCarrinho(carrinho: string): Observable<any> {
+    const params = {
+      carrinho: carrinho
+    }
+
+    return this.httpClient.patch<any>(`${this.baseUrl}/updatecarrinho`, params);
+  }
+
+  getCarrinho(): Observable<ItemCarrinho[]> {
+    return this.httpClient.get<any>(`${this.baseUrl}/carrinho`);
+  }
+
+  findByToken(): Observable<Cliente> {
+    return this.httpClient.get<Cliente>(`${this.baseUrl}/findbytoken`);
+  }
+
+  // finalizarCompra(idEnderecoEntrega:number, itensVenda: ItemCarrinho[]): Observable<any> {
+
+  //   const params = {
+  //     idEnderecoEntrega: idEnderecoEntrega,
+  //     itensVenda: itensVenda
+  //   }
+
+  //   return this.httpClient.patch<any>(`${this.baseUrl}/vendas`, params);
+  // }
 }

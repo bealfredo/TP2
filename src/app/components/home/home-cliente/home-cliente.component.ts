@@ -10,6 +10,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
 import { Planta } from '../../../models/planta.model';
 import { PlantaService } from '../../../services/Planta.service';
+import { CarrinhoService } from '../../../services/carrinho.service';
 
 @Component({
   selector: 'app-home-cliente',
@@ -26,7 +27,8 @@ export class HomeClienteComponent implements OnInit {
   plantas: Planta[] = [];
 
   constructor(
-    private plantaService: PlantaService
+    private plantaService: PlantaService,
+    private carrinhoService: CarrinhoService
   ) {} // injeção de dependência
 
   ngOnInit(): void {
@@ -41,7 +43,11 @@ export class HomeClienteComponent implements OnInit {
   }
 
   getValorComDesconto(planta: Planta): number {
-    return planta.precoVenda - (planta.precoVenda * (planta.desconto / 100));
+    return planta.precoVenda - (planta.precoVenda * planta.desconto);
+  }
+
+  adicionarAoCarrinho(planta: Planta): void {
+    this.carrinhoService.adicionar({ planta: planta.id, quantidade: 1 });
   }
 
 }

@@ -11,6 +11,7 @@ import { MatButton, MatButtonModule, MatIconButton } from '@angular/material/but
 import {MatMenuModule} from '@angular/material/menu';
 import { RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { CarrinhoService } from '../../../services/carrinho.service';
 
 @Component({
   selector: 'app-navbar',
@@ -27,14 +28,15 @@ export class NavbarComponent implements OnInit, OnDestroy {
   qtdItensCarrinho: number = 0;
 
   constructor(private sidebarService: SidebarService,
-    // private carrinhoService: CarrinhoService,
+    private carrinhoService: CarrinhoService,
     private authService: AuthService,
     private localStorageService: LocalStorageService) {
 
   }
 
   ngOnInit(): void {
-    // this.obterQtdItensCarrinho();
+    // this.carrinhoService.upToDate();
+    this.obterQtdItensCarrinho();
     this.obterUsuarioLogado();
   }
 
@@ -46,11 +48,11 @@ export class NavbarComponent implements OnInit, OnDestroy {
     this.sidebarService.toggle();
   }
 
-  // obterQtdItensCarrinho() {
-  //   this.carrinhoService.carrinho$.subscribe(itens => {
-  //     this.qtdItensCarrinho = itens.length
-  //   });
-  // }
+  obterQtdItensCarrinho() {
+    this.carrinhoService.carrinho$.subscribe(itens => {
+      this.qtdItensCarrinho = itens.length
+    });
+  }
 
   obterUsuarioLogado() {
     this.subscription.add(this.authService.getUsuarioLogado().subscribe(
@@ -61,5 +63,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
   deslogar() {
     this.authService.removeToken()
     this.authService.removeUsuarioLogado();
+    window.location.href = '/login?perfil=3';
   }
 }

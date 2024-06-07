@@ -1,0 +1,188 @@
+<div class="pageContent">
+
+  <div class="header header-list">
+    <h1>Meu Carrinho</h1>
+  </div>
+
+  <mat-accordion class="example-headers-align" multi>
+    <mat-expansion-panel [expanded]="true" >
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <h2>Itens do pedido</h2>
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+
+      <div class="plantas">
+
+        @if(itensCarrinho.length === 0) {
+          <div class="semItens">
+            <h3>Seu carrinho está vazio|</h3>
+          </div>
+        }
+
+        @for (planta of plantas; track $index) {
+          <div class="planta">
+            <div class="planta-imagem">
+              <img mat-card-image [src]="planta.imagemPrincipal? getUrlImagem(planta, planta.imagemPrincipal) : noImageUrl" width="200px">
+            </div>
+            <div class="planta-info">
+              <div class="nome">
+                <h3 class="nomeComum">{{planta.nomeComum}}</h3>
+                <span class="nomeCientifico">({{planta.nomeCientifico}})</span>
+              </div>
+
+              <div class="valor">
+                <span class="valorComDesconto">{{getValorComDesconto(planta).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) }}</span>
+
+                @if (planta.desconto > 0) {
+                  <span>
+                    De: <span class="valorOriginal">{{planta.precoVenda.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) }}</span>
+                  </span>
+                }
+              </div>
+
+              <div class="desconto">
+                @if (planta.desconto > 0) {
+                  <span class="descontoPorcentagem">{{planta.desconto * 100}}% de desconto</span>
+                }
+              </div>
+
+            </div>
+            <div class="acoes">
+
+              <div>
+                X {{getQuantidade(planta)}}
+              </div>
+
+              <button
+              mat-icon-button
+              matTooltip="Adicionar ao carrinho"
+              color="secondary"
+              (click)="adicionarAoCarrinho(planta)"
+            >
+              <i class="fa-solid fa-plus"></i>
+            </button>
+
+
+              <button
+                mat-icon-button
+                matTooltip="Adicionar ao carrinho"
+                color="secondary"
+                (click)="removerDoCarrinho(planta)"
+              >
+                <i class="fa-solid fa-minus"></i>
+              </button>
+            </div>
+
+          </div>
+        }
+
+        <button
+          mat-button
+          class="saibaMaisButton"
+          (click)="limparCarrinho()"
+        >
+          Limpar carrinho
+        </button>
+      </div>
+
+
+      </mat-expansion-panel>
+
+    <mat-expansion-panel [expanded]="true" >
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <h2>Endereço de Entrega</h2>
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+
+      <div class="enderecos">
+
+        @if(usuarioLogado?.listaEndereco?.length === 0) {
+          <blockquote class="warn-blockquote">
+            <p>
+              Você ainda não possui endereços cadastrados.
+            </p>
+
+            <p>
+              Adicione um endereço editando seu perfil para poder realizar compras.
+            </p>
+
+            <button mat-raised-button
+              color="primary"
+              style="width: fit-content;"
+              routerLink="/profile/edit"
+            >
+              Editar perfil
+            </button>
+          </blockquote>
+        }
+
+        @for(endereco of usuarioLogado?.listaEndereco; track endereco.id) {
+          <div
+            [className]="'endereco-item ' + (isSelectedEndereco(endereco.id) ? ' selectedEndereco' : '')"
+            (click)="selecionarEndereco(endereco.id)"
+          >
+            <div class="endero-header">
+              <span class="enderero-nome">
+                {{endereco.nome}}
+              </span>
+              <span class="enderero-frete">{{endereco.cidade.frete.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}}</span>
+
+            </div>
+            <div class="endereco-info">
+              <span>{{endereco.rua}}, {{endereco.numeroLote}}</span> |
+              <span>{{endereco.bairro}}</span> |
+              <span>{{endereco.cidade.nome}} - {{endereco.cidade.estado.nome}}</span> |
+              <span>{{formatarCep(endereco.cep)}}</span>
+            </div>
+          </div>
+        }
+      </div>
+      </mat-expansion-panel>
+
+      <mat-expansion-panel [expanded]="true" >
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <h2>Detalhes do Pedido</h2>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <div class="enderecos">
+            <div
+              [className]="'endereco-item selectedEndereco'"
+            >
+              <div class="endero-header">
+                <span class="enderero-nome">
+                  Forma de pagamento
+                </span>
+                <span>PIX</span>
+
+              </div>
+              <div class="endereco-info">
+
+              </div>
+            </div>
+        </div>
+
+        <div class="valorTotal">
+          Valor: {{getValorTotal().toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}}
+        </div>
+
+        <button
+          mat-raised-button
+          color="primary"
+          type="button"
+          class="finalizar"
+          (click)="finalizarCompra()"
+          [disabled]="selectedEnderecoId === null || itensCarrinho.length === 0"
+        >
+          Finalizar Pedido
+        </button>
+
+        </mat-expansion-panel>
+
+
+    </mat-accordion>
+
+</div>

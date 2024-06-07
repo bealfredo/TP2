@@ -9,6 +9,7 @@ import { Entregador } from '../models/entregador.model';
 import { UsuarioTiposPerfilByEmailResponse } from '../models/usuarioTiposPerfilByEmailResponse.model';
 import { EmailAvailable } from '../models/emailAvailableResponse.model';
 import { EmailTakenCliente } from '../models/emailTakenClienteResponse.model';
+import { CarrinhoService } from './carrinho.service';
 
 export type UsuarioLogado = Admin | Cliente | Entregador;
 
@@ -24,7 +25,7 @@ export class AuthService {
 
   constructor(private http: HttpClient,
               private localStorageService: LocalStorageService,
-              private jwtHelper: JwtHelperService
+              private jwtHelper: JwtHelperService,
   ) {
 
   }
@@ -38,8 +39,7 @@ export class AuthService {
           // this.removeToken();
           // this.removeUsuarioLogado();
         }
-      },
-      );
+      },);
     }
   }
 

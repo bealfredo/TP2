@@ -53,7 +53,9 @@ export class PlantaListComponent implements OnInit {
     'nomeComum',
     'nomeCientifico',
     // 'tags',
+    'precoVenda',
     'valor',
+    'desconto',
     'categoriaPlanta',
     'quantidadeDisponivel',
     'quantidadeVendido',
@@ -85,7 +87,7 @@ export class PlantaListComponent implements OnInit {
   // }
 
   getValorComDesconto(planta: Planta): number {
-    return planta.precoVenda - (planta.precoVenda * (planta.desconto / 100));
+    return planta.precoVenda - (planta.precoVenda * planta.desconto);
   }
 
   setOrderBy(column: string): void {
