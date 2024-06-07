@@ -81,4 +81,10 @@ export class PlantaService {
     return this.httpClient.request('patch', `${this.baseUrl}/${id}/update/imagemprincipal/${nomeImagem}`);
   }
 
+
+
+  getAtivo(): Observable<Planta[]> {
+    return this.httpClient.get<Planta[]>(`${this.baseUrl}/ativo`);
+  }
+
 }

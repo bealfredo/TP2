@@ -1,0 +1,87 @@
+<div class="pageContent">
+
+  <div class="header header-list">
+    <h1>CÓDIGO FLORAL</h1>
+  </div>
+
+  <mat-accordion class="example-headers-align" >
+    <mat-expansion-panel [expanded]="true" >
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <h2>Todas as plantas</h2>
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+
+      <div class="plantas">
+        @for (planta of plantas; track $index) {
+          <div class="planta">
+            <div class="planta-imagem">
+              <img mat-card-image [src]="planta.imagemPrincipal? getUrlImagem(planta, planta.imagemPrincipal) : noImageUrl" width="200px">
+            </div>
+            <div class="planta-info">
+              <div class="nome">
+                <h3 class="nomeComum">{{planta.nomeComum}}</h3>
+                <span class="nomeCientifico">({{planta.nomeCientifico}})</span>
+              </div>
+
+              <div class="valor">
+                <span class="valorComDesconto">{{getValorComDesconto(planta).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) }}</span>
+
+                @if (planta.desconto > 0) {
+                  <span>
+                    De: <span class="valorOriginal">{{planta.precoVenda.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) }}</span>
+                  </span>
+                }
+              </div>
+
+              <div class="desconto">
+                @if (planta.desconto > 0) {
+                  <span class="descontoPorcentagem">{{planta.desconto}}% de desconto</span>
+                }
+              </div>
+
+              <div class="tags">
+                <span
+                  class="tag"
+                  [matTooltip]="planta.categoriaPlanta.descricao"
+                >
+                  {{planta.categoriaPlanta.nome}}
+                </span>
+
+                @for(tag of planta.tags; track $index) {
+                  <span
+                    class="tag"
+                    [matTooltip]="tag.descricao"
+                  >
+                  {{tag.nome}}
+                </span>
+                }
+
+              </div>
+            </div>
+            <div class="acoes">
+              <button
+                mat-button
+                class="saibaMaisButton">
+                Saiba mais
+              </button>
+
+
+              <button
+                mat-icon-button
+                matTooltip="Adicionar ao carrinho"
+                color="secondary"
+              >
+                <i class="fa-solid fa-cart-shopping"></i>
+
+              </button>
+            </div>
+          </div>
+        }
+      </div>
+
+
+      </mat-expansion-panel>
+    </mat-accordion>
+
+</div>

@@ -35,6 +35,7 @@ import { AdminListComponent } from './components/admin/admin-list/admin-list.com
 import { adminResolver } from './components/admin/resolver/admin-resolver';
 import { AdminFormComponent } from './components/admin/admin-form/admin-form.component';
 import { RegisterComponent } from './components/register/register.component';
+import { HomeClienteComponent } from './components/home/home-cliente/home-cliente.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent, title: 'Login'},
@@ -51,7 +52,8 @@ export const routes: Routes = [
     path: '',
     component: ClienteTemplateComponent,
     children: [
-      {path: '', pathMatch: 'full', redirectTo: ''},
+      // {path: '', pathMatch: 'full', redirectTo: ''},
+      {path: '', component: HomeClienteComponent, title: 'Código Floral'},
       {path: 'plantas', component: PlantaListComponent, title: 'Lista de Plantas'},
     ]
   },
