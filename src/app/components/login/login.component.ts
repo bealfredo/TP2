@@ -10,6 +10,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { AuthService } from '../../services/auth.service';
 import { NgIf } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
+import { CarrinhoService } from '../../services/carrinho.service';
 
 @Component({
   selector: 'app-login',
@@ -31,7 +32,8 @@ export class LoginComponent implements OnInit {
      private authService: AuthService,
     private router: Router,
     private snackBar: MatSnackBar,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private carrinhoService: CarrinhoService
   ) {}
 
   ngOnInit(): void {
@@ -52,6 +54,8 @@ export class LoginComponent implements OnInit {
       this.authService.login(email, password, this.idTipoPerfil).subscribe({
         next: (resp) => {
           this.router.navigateByUrl('/');
+          // window.location.href = '/';
+          this.carrinhoService.upToDate();
         },
         error: (err) => {
           this.tratarErrors(err);

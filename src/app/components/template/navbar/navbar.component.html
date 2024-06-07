@@ -12,8 +12,14 @@
     </button>
 
     <button mat-fab class="navButton carrinho">
-      <!-- <mat-icon [matBadge]="qtdItensCarrinho"  matBadgeColor="warn" matBadgePosition="after" matBadgeOverlap="false"> -->
+      <!-- <mat-icon [matBadge]="qtdItensCarrinho"  matBadgeColor="warn" matBadgePosition="after" matBadgeOverlap="false" style="position: absolute !important;"> -->
         <i class="fa-solid fa-cart-shopping"></i>
+
+        @if (qtdItensCarrinho > 0) {
+          <span class="qtItensCarrinho">
+            {{qtdItensCarrinho}}
+          </span>
+        }
       <!-- </mat-icon> -->
     </button>
 

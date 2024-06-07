@@ -36,7 +36,7 @@
 
               <div class="desconto">
                 @if (planta.desconto > 0) {
-                  <span class="descontoPorcentagem">{{planta.desconto}}% de desconto</span>
+                  <span class="descontoPorcentagem">{{planta.desconto * 100}}% de desconto</span>
                 }
               </div>
 
@@ -71,9 +71,9 @@
                 mat-icon-button
                 matTooltip="Adicionar ao carrinho"
                 color="secondary"
+                (click)="adicionarAoCarrinho(planta)"
               >
                 <i class="fa-solid fa-cart-shopping"></i>
-
               </button>
             </div>
           </div>

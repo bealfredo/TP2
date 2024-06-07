@@ -160,10 +160,11 @@ export class PlantaFormComponent {
           Validators.required,
           Validators.min(0),
       ])],
-      desconto: [(this.planta && this.planta.desconto) ? this.planta.desconto : 0,
+      desconto: [(this.planta && this.planta.desconto) ? (this.planta.desconto * 100) : 0,
         Validators.compose([
           Validators.required,
           Validators.min(0),
+          Validators.max(100),
       ])],
       quantidadeDisponivel: [(this.planta && this.planta.quantidadeDisponivel) ? this.planta.quantidadeDisponivel : 0,
         Validators.compose([
@@ -249,11 +250,11 @@ export class PlantaFormComponent {
 
     planta.idsTags = idsTags;
 
+    planta.desconto = planta.desconto / 100;
+
     const operacao = (planta.id == null)
     ? this.plantaService.insert(planta)
     : this.plantaService.update(planta);
-
-
 
     operacao.subscribe({
       next: () => {

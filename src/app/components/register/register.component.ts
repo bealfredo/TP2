@@ -11,6 +11,7 @@ import { AuthService } from '../../services/auth.service';
 import { NgIf } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ClienteService } from '../../services/cliente.service';
+import { CarrinhoService } from '../../services/carrinho.service';
 
 @Component({
   selector: 'app-register',
@@ -33,7 +34,8 @@ export class RegisterComponent implements OnInit {
     private clienteService: ClienteService,
     private router: Router,
     private snackBar: MatSnackBar,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private carrinhoService: CarrinhoService
   ) {}
 
   ngOnInit(): void {
@@ -139,7 +141,13 @@ export class RegisterComponent implements OnInit {
     this.clienteService.create(this.formGroup.value).subscribe({
       next: () => {
         window.alert('Cadastrado com sucesso!');// ! make it a toast
-        this.router.navigate(['/login'], { queryParams: { perfil: 3 } });
+        // this.router.navigate(['/']);
+        // window.location.reload();
+        // this.carrinhoService.upToDate();
+
+        // go to / reloading usando location
+        window.location.href = '/';
+
       },
       error: (err) => {
         console.log('Erro ao se cadastrar :(', err); // ! make it a toast
@@ -162,7 +170,11 @@ export class RegisterComponent implements OnInit {
     this.clienteService.insertExistingUser(email, password).subscribe({
       next: () => {
         window.alert('Perfil de cliente cadastrado com sucesso!');// ! make it a toast
-        this.router.navigate(['/']);
+        // this.router.navigate(['/']);
+        window.location.href = '/';
+
+        // this.carrinhoService.upToDate();
+        // window.location.reload();
       },
       error: (err) => {
         console.log('Erro ao se cadastrar :(', err); // ! make it a toast
