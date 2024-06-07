@@ -1,0 +1,94 @@
+<!-- <mat-toolbar color="primary" class="toolbar-title">Cadastro de Categoria de Planta</mat-toolbar> -->
+
+<div class="pageContent">
+  <div class="header">
+    <h1>Minhas Compras</h1>
+  </div>
+
+  <mat-accordion class="example-headers-align" multi>
+
+    @for(compra of minhasCompras; track compra.id) {
+        <mat-expansion-panel [expanded]="true" >
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <h2>Compra {{compra.codigo}}</h2>
+              <span>{{compra.lastStatus.statusVenda.label}}</span>
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+
+          <h3>Dados da Compra</h3>
+          <div>
+            <p>Data da compra: {{formatedDate(compra.data)}}</p>
+            <p>Valor da compra: {{compra.totalVenda.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}} (frete incluso)</p>
+            <p>Forma de pagamento: {{compra.chavePix ? 'PIX' : 'Cartão de Crédito'}}</p>
+            <p>Chave pix: {{compra.chavePix}}</p>
+            <p>Endereço de entrega: {{compra.endereco.rua}}, {{compra.endereco.numeroLote}} - {{compra.endereco.bairro}} - {{compra.endereco.cidade.nome}} - {{compra.endereco.cidade.estado.nome}} | CEP: {{formatarCep(compra.endereco.cep)}}</p>
+          </div>
+
+
+
+          <h3>Itens da compra</h3>
+          <div class="plantas">
+            @for (planta of compra.itensVenda; track $index) {
+              <div class="planta">
+                <div class="planta-imagem">
+                  <img mat-card-image [src]="planta.imagemPrincipal? getUrlImagem(planta, planta.imagemPrincipal) : noImageUrl" width="200px">
+                </div>
+                <div class="planta-info">
+                  <div class="nome">
+                    <h3 class="nomeComum">{{planta.planta.nomeComum}}</h3>
+                    <span class="nomeCientifico">({{planta.planta.nomeCientifico}})</span>
+                  </div>
+
+                  <div class="valor">
+                    <span class="valorComDesconto">{{planta.preco.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) }}</span>
+
+                    <!-- @if (planta.desconto > 0) {
+                      <span>
+                        De: <span class="valorOriginal">{{planta.precoVenda.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) }}</span>
+                      </span>
+                    } -->
+                  </div>
+
+                  <!-- <div class="desconto">
+                    @if (planta.desconto > 0) {
+                      <span class="descontoPorcentagem">{{planta.desconto * 100}}% de desconto</span>
+                    }
+                  </div> -->
+
+                </div>
+                <div class="acoes">
+
+                  <div>
+                    X {{planta.quantidade}}
+                  </div>
+
+                </div>
+
+              </div>
+            }
+
+          </div>
+
+
+        </mat-expansion-panel>
+
+        }
+  </mat-accordion>
+
+</div>
+
+<!-- <form [formGroup]="formGroup" (ngSubmit)="onSubmit()"></form></form>-->
+
+
+<!-- public record VendaResponseDTO(
+    Long id,
+    LocalDateTime data,
+    String codigo,
+    String chavePix,
+    Double totalVenda,
+    HistoricoStatusResponseDTO lastStatus,
+    EnderecoResponseDTO endereco,
+    ClienteResponseDTO cliente,
+    List<ItemVendaResponseDTO> itensVenda,
+    List<HistoricoStatusResponseDTO> historicoStatus -->

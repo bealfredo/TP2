@@ -133,8 +133,8 @@
             <div class="endereco-info">
               <span>{{endereco.rua}}, {{endereco.numeroLote}}</span> |
               <span>{{endereco.bairro}}</span> |
-              <span>{{endereco.cidade.nome}} - {{endereco.cidade.estado.nome}}</span>
-              {{endereco.id}}
+              <span>{{endereco.cidade.nome}} - {{endereco.cidade.estado.nome}}</span> |
+              <span>{{formatarCep(endereco.cep)}}</span>
             </div>
           </div>
         }

@@ -25,4 +25,8 @@ export class VendaService {
 
     return this.httpClient.post<any>(`${this.baseUrl}`, params);
   }
+
+  minhasCompras(): Observable<any> {
+    return this.httpClient.get<any>(`${this.baseUrl}/minhascompras`);
+  }
 }

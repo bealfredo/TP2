@@ -1,0 +1,46 @@
+#telefone {
+  display: flex;
+  gap: 10px;
+}
+.enderecoWrapper {
+  background-color: rgba(0, 0, 0, 0.02);
+  padding: 10px;
+}
+
+h4 {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+mat-panel-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+
+.plantas {
+  /* border: 2px solid red; */
+  /* display: flex;
+  flex-wrap: wrap; */
+  /* justify-content: center; */
+  gap: 40px;
+  padding: 20px;
+  justify-content: space-around;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.planta {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+}
+
+.planta-imagem {
+  width: 150px;
+  height: 150px;
+}

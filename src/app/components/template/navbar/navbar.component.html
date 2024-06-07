@@ -7,7 +7,7 @@
       <i class="fa-solid fa-house"></i>
     </button>
 
-    <button routerLink="/admin" mat-fab class="navButton settings">
+    <button routerLink="/admin/plantas" mat-fab class="navButton settings">
       <i class="fa-solid fa-gear"></i>
     </button>
 
@@ -37,9 +37,15 @@
         </button>
         <button mat-menu-item routerLink="/profile/edit">
           <span class="iconMenu">
-            <i class="fa-solid fa-circle-user"></i>
+            <i class="fa-solid fa-user-pen"></i>
           </span>
           <span>Editar Perfil</span>
+        </button>
+        <button mat-menu-item routerLink="/minhascompras">
+          <span class="iconMenu">
+            <i class="fa-brands fa-shopify"></i>
+          </span>
+          <span>Minhas Compras</span>
         </button>
         <button mat-menu-item (click)="deslogar()">
           <span class="iconMenu">
@@ -51,9 +57,10 @@
     }
 
     @if (!usuarioLogado) {
-      <button routerLink="/login" mat-fab extended class="navButton profileButton">
+      <button [routerLink]="['/login']" [queryParams]="{perfil: 3}" mat-fab extended class="navButton profileButton">
         <i class="fa-solid fa-circle-user"></i>
         Entrar
       </button>
+
     }
   </div>
