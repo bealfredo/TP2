@@ -37,6 +37,10 @@ export class ClienteService {
     return this.httpClient.patch<Cliente>(`${this.baseUrl}/${cliente.id}`, cliente)
   }
 
+  selfUpdate(cliente: Cliente): Observable<Cliente> {
+    return this.httpClient.patch<Cliente>(`${this.baseUrl}/selfupdate`, cliente)
+  }
+
   delete(cliente: Cliente): Observable<any> {
     return this.httpClient.delete<any>(`${this.baseUrl}/${cliente.id}`)
   }
