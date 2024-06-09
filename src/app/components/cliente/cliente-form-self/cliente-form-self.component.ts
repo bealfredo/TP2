@@ -222,7 +222,7 @@ export class ClienteFormSelfComponent {
     // ? this.clienteService.insert(cliente)
     // : this.clienteService.update(cliente);
 
-    const operacao = this.clienteService.update(cliente);
+    const operacao = this.clienteService.selfUpdate(cliente);
 
     operacao.subscribe({
       next: () => {
